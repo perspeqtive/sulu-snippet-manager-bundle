@@ -42,7 +42,7 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
                 $securityChecker,
                 $managerConfig['type'],
                 $managerConfig['navigation_title'],
-                $managerConfig['position'],
+                $managerConfig['order'],
                 $managerConfig['icon']
             ]
         );
