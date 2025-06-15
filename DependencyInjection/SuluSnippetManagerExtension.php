@@ -15,7 +15,7 @@ class SuluSnippetManagerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('sulu_snippet_manager.snippets', $config['snippets']);
+        $container->setParameter('sulu_snippet_manager.snippets', $config['navigation']);
     }
 
 }

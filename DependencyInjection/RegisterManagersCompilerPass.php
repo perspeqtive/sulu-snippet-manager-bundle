@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\DependencyInjection;
 
+use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -26,14 +27,26 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
         $snippetsAsManagers = $container->getParameter('sulu_snippet_manager.snippets');
 
         foreach ($snippetsAsManagers as $managerConfig) {
-            $container->setDefinition(
-                'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-                $this->buildDefinitionForSnippet($managerConfig, $viewBuilderFactory, $securityChecker)
-            );
+            $this->addConfigToContainer($managerConfig, $container, $viewBuilderFactory, $securityChecker);
         }
     }
 
-    private function buildDefinitionForSnippet(array $managerConfig, Definition $viewBuilderFactory, Definition $securityChecker): Definition
+    private function buildDefinitionForParentMenuItem(array $managerConfig, Definition $securityChecker): Definition {
+        $definition = new Definition(
+            ConfiguredParentMenuAdmin::class,
+            [
+                $securityChecker,
+                $managerConfig['navigation_title'],
+                $managerConfig['order'],
+                $managerConfig['icon']
+            ]
+        );
+        $definition->addTag('sulu.context', ['context' => 'admin']);
+        $definition->addTag('sulu.admin');
+        return $definition;
+    }
+
+    private function buildDefinitionForSnippet(array $managerConfig, Definition $viewBuilderFactory, Definition $securityChecker, ?string $parentName = null): Definition
     {
         $definition = new Definition(
             ConfiguredSnippetAdmin::class,
@@ -43,12 +56,31 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
                 $managerConfig['type'],
                 $managerConfig['navigation_title'],
                 $managerConfig['order'],
-                $managerConfig['icon']
+                $managerConfig['icon'],
+                $parentName
             ]
         );
         $definition->addTag('sulu.context', ['context' => 'admin']);
         $definition->addTag('sulu.admin');
         return $definition;
+    }
+
+    public function addConfigToContainer(array $managerConfig, ContainerBuilder $container, Definition $viewBuilderFactory, Definition $securityChecker, ?string $parentName = null): void
+    {
+        if (isset($managerConfig['children']) && count($managerConfig['children']) > 0) {
+            $container->setDefinition(
+                'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
+                $this->buildDefinitionForParentMenuItem($managerConfig, $viewBuilderFactory)
+            );
+            foreach($managerConfig['children'] as $childConfig) {
+                $this->addConfigToContainer($childConfig, $container, $viewBuilderFactory, $securityChecker, $managerConfig['navigation_title']);
+            }
+            return;
+        }
+        $container->setDefinition(
+            'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
+            $this->buildDefinitionForSnippet($managerConfig, $viewBuilderFactory, $securityChecker, $parentName)
+        );
     }
 
 

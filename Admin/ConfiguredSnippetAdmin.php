@@ -25,20 +25,31 @@ class ConfiguredSnippetAdmin extends Admin
         private readonly string                      $navigationTitle,
         private readonly int                         $position = 40,
         private readonly string                      $icon = 'su-snippet',
+        private readonly ?string                     $parentNavigation = null
     )
     {
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false) {
             return;
         }
+
+        if($this->parentNavigation !== null && $navigationItemCollection->has($this->parentNavigation) === false) {
+            return;
+        }
+
         $navigationItem = new NavigationItem($this->navigationTitle);
         $navigationItem->setView($this->buildListViewName());
         $navigationItem->setIcon($this->icon);
         $navigationItem->setPosition($this->position);
+
+        if($this->parentNavigation !== null) {
+            $parentNavigationItem = $navigationItemCollection->get($this->parentNavigation);
+            $parentNavigationItem->addChild($navigationItem);
+            return;
+        }
 
         $navigationItemCollection->add($navigationItem);
     }
@@ -167,22 +178,22 @@ class ConfiguredSnippetAdmin extends Admin
 
     private function buildSecurityContext(): string
     {
-        return $this->snippetType . '_security_context';
+        return 'sulu_snippet_manager_' .$this->snippetType . '_security_context';
     }
 
     private function buildListViewName(): string
     {
-        return 'snippet_' . $this->snippetType . '.list';
+        return 'sulu_snippet_manager_' . $this->snippetType . '.list';
     }
 
     private function buildAddFormViewName(): string
     {
-        return 'snippet_' . $this->snippetType . '.add';
+        return 'sulu_snippet_manager_' . $this->snippetType . '.add';
     }
 
     private function buildEditFormViewName(): string
     {
-        return 'snippet_' . $this->snippetType . '.edit';
+        return 'sulu_snippet_manager_' . $this->snippetType . '.edit';
     }
 
     public function getSecurityContexts(): array
