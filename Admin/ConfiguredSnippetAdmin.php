@@ -200,7 +200,7 @@ class ConfiguredSnippetAdmin extends Admin
     {
         return [
             'Sulu' => [
-                'Website' => [
+                'Snippet Manager' => [
                     $this->buildSecurityContext() => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
