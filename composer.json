@@ -1,0 +1,25 @@
+{
+  "name": "perspeqtive/sulu-snippet-manager-bundle",
+  "description": "Transform snippets in custom mangers",
+  "license": "MIT",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Markus Holstein",
+      "email": "mh@perspeqtive.de"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "sulu/sulu": "^2.6"
+  },
+  "require-dev": {
+    "jackalope/jackalope-doctrine-dbal": "^1.3.4 || ^2.0",
+    "phpunit/phpunit": "^11"
+  },
+  "autoload": {
+    "psr-4": {
+      "PERSPEQTIVE\\SuluSnippetManagerBundle\\": ""
+    }
+  }
+}
