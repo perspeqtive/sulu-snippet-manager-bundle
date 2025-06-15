@@ -70,7 +70,7 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
         if (isset($managerConfig['children']) && count($managerConfig['children']) > 0) {
             $container->setDefinition(
                 'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-                $this->buildDefinitionForParentMenuItem($managerConfig, $viewBuilderFactory)
+                $this->buildDefinitionForParentMenuItem($managerConfig, $securityChecker)
             );
             foreach($managerConfig['children'] as $childConfig) {
                 $this->addConfigToContainer($childConfig, $container, $viewBuilderFactory, $securityChecker, $managerConfig['navigation_title']);
