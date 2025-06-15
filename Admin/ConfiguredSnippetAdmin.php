@@ -20,27 +20,27 @@ class ConfiguredSnippetAdmin extends Admin
 
     public function __construct(
         private readonly ViewBuilderFactoryInterface $viewBuilderFactory,
-        private readonly SecurityCheckerInterface $securityChecker,
-        private readonly string $snippetName
+        private readonly SecurityCheckerInterface    $securityChecker,
+        private readonly string                      $snippetType,
+        private readonly string                      $navigationTitle,
+        private readonly int                         $position = 40,
+        private readonly string                      $icon = 'su-snippet',
     )
     {
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        if(!$navigationItemCollection->has('Konfiguration')) {
+
+        if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false) {
             return;
         }
+        $navigationItem = new NavigationItem($this->navigationTitle);
+        $navigationItem->setView($this->buildListViewName());
+        $navigationItem->setIcon($this->icon);
+        $navigationItem->setPosition($this->position);
 
-        if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT)) {
-            $configurationItem = $navigationItemCollection->get('Konfiguration');
-            $navigationItem = new NavigationItem($this->buildName());
-            $navigationItem->setView($this->buildListViewName());
-            $navigationItem->setIcon('su-snippet');
-            $navigationItem->setPosition(10);
-
-            $configurationItem->addChild($navigationItem);
-        }
+        $navigationItemCollection->add($navigationItem);
     }
 
     public function configureViews(ViewCollection $viewCollection): void
@@ -57,7 +57,7 @@ class ConfiguredSnippetAdmin extends Admin
         }
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createListViewBuilder($this->buildListViewName(), '/' . $this->snippetName. '-snippets/:locale')
+                ->createListViewBuilder($this->buildListViewName(), '/' . $this->snippetType . '-snippets/:locale')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->setListKey('snippets')
                 ->setTitle($this->buildName())
@@ -69,7 +69,7 @@ class ConfiguredSnippetAdmin extends Admin
                 ->setDefaultLocale('de')
                 ->addLocales(['de', 'en'])
                 ->enableFiltering()
-                ->addRequestParameters(['types' => $this->snippetName])
+                ->addRequestParameters(['types' => $this->snippetType])
         );
     }
 
@@ -108,7 +108,7 @@ class ConfiguredSnippetAdmin extends Admin
         }
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createResourceTabViewBuilder($this->buildEditFormViewName(), '/' . $this->snippetName. '-snippets/:locale/:id')
+                ->createResourceTabViewBuilder($this->buildEditFormViewName(), '/' . $this->snippetType . '-snippets/:locale/:id')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
                 ->setBackView($this->buildListViewName())
@@ -117,17 +117,18 @@ class ConfiguredSnippetAdmin extends Admin
         );
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createResourceTabViewBuilder($this->buildAddFormViewName(), '/' . $this->snippetName. '-snippets/:locale/add')
+                ->createResourceTabViewBuilder($this->buildAddFormViewName(), '/' . $this->snippetType . '-snippets/:locale/add')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addLocales(['de', 'en'])
                 ->setBackView($this->buildListViewName())
         );
     }
 
-    private function buildFormToolbarActions(string $view): array {
+    private function buildFormToolbarActions(string $view): array
+    {
         $formToolbarActions = [];
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT)) {
-            $formToolbarActions[] =  new ToolbarAction('sulu_admin.save');
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
             $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy', [
                 'visible_condition' => '!!id',
             ]);
@@ -137,14 +138,15 @@ class ConfiguredSnippetAdmin extends Admin
                 $editDropdownToolbarActions,
             );
         }
-        if($view === $this->buildEditFormViewName() &&
+        if ($view === $this->buildEditFormViewName() &&
             $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::DELETE)) {
             $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
         return $formToolbarActions;
     }
 
-    private function buildListToolbarActions(): array {
+    private function buildListToolbarActions(): array
+    {
         $listToolbarActions = [];
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
@@ -158,24 +160,29 @@ class ConfiguredSnippetAdmin extends Admin
         return $listToolbarActions;
     }
 
-    private function buildName(): string {
-        return ucwords(implode(' ', explode('-', $this->snippetName)));
+    private function buildName(): string
+    {
+        return ucwords(implode(' ', explode('-', $this->snippetType))) . ' Administration';
     }
 
-    private function buildSecurityContext(): string {
-        return $this->snippetName . '_security_context';
+    private function buildSecurityContext(): string
+    {
+        return $this->snippetType . '_security_context';
     }
 
-    private function buildListViewName(): string {
-        return 'snippet_' . $this->snippetName . '.list';
+    private function buildListViewName(): string
+    {
+        return 'snippet_' . $this->snippetType . '.list';
     }
 
-    private function buildAddFormViewName(): string {
-        return 'snippet_' . $this->snippetName . '.add';
+    private function buildAddFormViewName(): string
+    {
+        return 'snippet_' . $this->snippetType . '.add';
     }
 
-    private function buildEditFormViewName(): string {
-        return 'snippet_' . $this->snippetName . '.edit';
+    private function buildEditFormViewName(): string
+    {
+        return 'snippet_' . $this->snippetType . '.edit';
     }
 
     public function getSecurityContexts(): array
@@ -194,7 +201,8 @@ class ConfiguredSnippetAdmin extends Admin
         ];
     }
 
-    public static function getPriority(): int {
+    public static function getPriority(): int
+    {
         return 20;
     }
 

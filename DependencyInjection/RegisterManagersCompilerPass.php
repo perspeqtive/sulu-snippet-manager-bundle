@@ -25,22 +25,25 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
 
         $snippetsAsManagers = $container->getParameter('sulu_snippet_manager.snippets');
 
-        foreach ($snippetsAsManagers as $managerName) {
+        foreach ($snippetsAsManagers as $managerConfig) {
             $container->setDefinition(
-                'perspeqtive_sulu_snippet_manager.' . $managerName,
-                $this->buildDefinitionForSnippet($managerName, $viewBuilderFactory, $securityChecker)
+                'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
+                $this->buildDefinitionForSnippet($managerConfig, $viewBuilderFactory, $securityChecker)
             );
         }
     }
 
-    private function buildDefinitionForSnippet(string $managerName, Definition $viewBuilderFactory, Definition $securityChecker): Definition
+    private function buildDefinitionForSnippet(array $managerConfig, Definition $viewBuilderFactory, Definition $securityChecker): Definition
     {
         $definition = new Definition(
             ConfiguredSnippetAdmin::class,
             [
                 $viewBuilderFactory,
                 $securityChecker,
-                $managerName
+                $managerConfig['type'],
+                $managerConfig['navigation_title'],
+                $managerConfig['position'],
+                $managerConfig['icon']
             ]
         );
         $definition->addTag('sulu.context', ['context' => 'admin']);

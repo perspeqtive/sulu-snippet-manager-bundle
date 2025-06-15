@@ -14,11 +14,27 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('sulu_snippet_manager');
         $rootNode = $treeBuilder->getRootNode();
 
-        $rootNode->children()
-            ->arrayNode('snippets')
-                ->prototype('scalar')->end()
-            ->end()
-        ->end();
+        $rootNode
+            ->children()
+                ->arrayNode('snippets')
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('navigation_title')
+                                ->isRequired()
+                            ->end()
+                            ->scalarNode('type')
+                                ->isRequired()
+                            ->end()
+                            ->integerNode('order')
+                                ->defaultValue(40)
+                            ->end()
+                            ->scalarNode('icon')
+                                ->defaultValue('su-snippet')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
