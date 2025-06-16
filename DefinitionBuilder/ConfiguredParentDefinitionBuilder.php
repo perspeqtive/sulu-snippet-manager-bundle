@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder;
 
-use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -26,18 +25,10 @@ class ConfiguredParentDefinitionBuilder
      */
     public function generate(array $managerConfig, ContainerBuilder $container): Definition
     {
-        $securityChecker = $container->getDefinition('sulu_security.security_checker');
-        $definition = new Definition(
-            ConfiguredParentMenuAdmin::class,
-            [
-                $securityChecker,
-                $managerConfig['navigation_title'],
-                $managerConfig['order'] ?? null,
-                $managerConfig['icon'] ?? null,
-            ],
-        );
-        $definition->addTag('sulu.context', ['context' => 'admin']);
-        $definition->addTag('sulu.admin');
+        $definition = $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin');
+        $definition->addArgument($managerConfig['navigation_title']);
+        $definition->addArgument($managerConfig['order'] ?? null);
+        $definition->addArgument($managerConfig['icon'] ?? null);
 
         return $definition;
     }
