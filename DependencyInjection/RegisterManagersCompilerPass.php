@@ -39,7 +39,7 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
     {
         return $container->hasDefinition('sulu_admin.view_builder_factory') === true
             && $container->hasDefinition('sulu_security.security_checker') === true
-            && $container->hasParameter('sulu_snippet_manager.snippets') === true;
+            && $container->hasParameter('sulu_snippet_manager.navigation') === true;
     }
 
     /**
@@ -91,9 +91,9 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *     }
      * }
      */
-    public function fetchConfiguredTree(ContainerBuilder $container): array
+    private function fetchConfiguredTree(ContainerBuilder $container): array
     {
         // @phpstan-ignore-next-line
-        return $container->getParameter('sulu_snippet_manager.snippets');
+        return $container->getParameter('sulu_snippet_manager.navigation');
     }
 }
