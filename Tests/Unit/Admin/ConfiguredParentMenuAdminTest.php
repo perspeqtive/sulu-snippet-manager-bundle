@@ -40,8 +40,8 @@ class ConfiguredParentMenuAdminTest extends TestCase
 
         $items = $navigationItemCollection->all();
         self::assertCount(1, $items);
-        self::assertArrayHasKey('mytitle', $items);
-        $item = $items['mytitle'];
+        self::assertArrayHasKey('My Title', $items);
+        $item = $items['My Title'];
         self::assertSame(10, $item->getPosition());
         self::assertSame('su-icon', $item->getIcon());
         self::assertSame('My Title', $item->getLabel());
