@@ -20,7 +20,7 @@ Register it in your config/bundles.php:
 ```
 return [
 // ...
-Perspeqtive\SuluSnippetManagerBundle\SuluSnippetManagerBundle::class => ['all' => true],
+PERSPEQTIVE\SuluSnippetManagerBundle\SuluSnippetManagerBundle::class => ['all' => true],
 ];
 ```
 
