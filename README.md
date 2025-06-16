@@ -32,7 +32,7 @@ Example configuration:
 sulu_snippet_manager:
     navigation:
         configuration:
-            navigation_title: "configuration" 
+            navigation_title: "Configuration" 
             order: 39
             icon: "su-news"
             type: configuration
@@ -40,12 +40,12 @@ sulu_snippet_manager:
                 settings:
                     navigation_title: "Settings"
                     type: "settings"
-                    order: 42
+                    order: 0
                     icon: "su-settings"
-                account-settings:
+                account:
                     navigation_title: "Account Settings"
                     type: "account"
-                    order: 43
+                    order: 1
                     icon: "su-account"
         services:
             navigation_title: "Services"
