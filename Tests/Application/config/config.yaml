@@ -1,0 +1,27 @@
+sulu_snippet_manager:
+  navigation:
+    configuration:
+      navigation_title: "configuration"
+      order: 39
+      icon: "su-news"
+      type: configuration
+      children:
+        settings:
+          navigation_title: "Settings"
+          type: "settings"
+          order: 42
+          icon: "su-settings"
+        account-settings:
+          navigation_title: "Account Settings"
+          type: "account"
+          order: 43
+          icon: "su-account"
+    services:
+      navigation_title: "Services"
+      type: "services"
+      order: 41
+      icon: "su-services"
+
+doctrine:
+  dbal: ~
+  orm: ~

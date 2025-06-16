@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+    <!-- See: http://docs.sulu.io/en/latest/book/webspaces.html how to configure your webspace-->
+
+    <name>Test</name>
+    <key>test</key>
+
+    <localizations>
+        <localization language="de" default="true"/>
+        <localization language="en"/>
+    </localizations>
+
+    <default-templates>
+        <default-template type="page">page</default-template>
+        <default-template type="home">home</default-template>
+    </default-templates>
+
+    <resource-locator>
+        <strategy>tree_full_edit</strategy>
+    </resource-locator>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Main</title>
+                    <title lang="de">Main</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <templates>
+        <template type="search">search/search</template>
+        <template type="error">error/error</template>
+    </templates>
+
+    <portals>
+        <portal>
+            <name>Test</name>
+            <key>test</key>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de">{host}</url>
+                        <url language="en">{host}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de">{host}</url>
+                        <url language="en">{host}</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="de">{host}</url>
+                        <url language="en">{host}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

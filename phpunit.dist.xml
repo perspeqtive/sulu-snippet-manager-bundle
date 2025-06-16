@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit colors="true" bootstrap="Tests/Application/bootstrap.php">
     <testsuites>
         <testsuite name="Sulu Snippet Manager Bundle">
             <directory>Tests</directory>
@@ -14,4 +14,7 @@
         </whitelist>
     </filter>
 
+    <php>
+        <env name="KERNEL_CLASS" value="PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Application\Kernel"/>
+    </php>
 </phpunit>

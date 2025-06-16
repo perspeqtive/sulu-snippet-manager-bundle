@@ -28,7 +28,7 @@ class ConfiguredParentMenuAdmin extends Admin
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::VIEW) === false) {
             return;
         }
-        $configurationItem = new NavigationItem('sulu_snippet_manager_' . $this->buildCleanName());
+        $configurationItem = new NavigationItem($this->buildCleanName());
         $configurationItem->setLabel($this->navigationTitle);
         $configurationItem->setPosition($this->position);
         $configurationItem->setIcon($this->icon);

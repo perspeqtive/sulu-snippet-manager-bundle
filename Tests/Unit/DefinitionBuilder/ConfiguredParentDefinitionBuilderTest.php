@@ -14,7 +14,7 @@ class ConfiguredParentDefinitionBuilderTest extends TestCase
 {
 
     public function testGenerate(): void {
-        $baseDefinition = new Definition(ConfiguredParentMenuAdmin::class, ['testargument']);
+        $baseDefinition = new Definition(ConfiguredParentMenuAdmin::class, ['$someClass' => 'testargument']);
         $baseDefinition->setAbstract(true);
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->addDefinitions([
@@ -29,10 +29,10 @@ class ConfiguredParentDefinitionBuilderTest extends TestCase
 
         self::assertSame(ConfiguredParentMenuAdmin::class, $definition->getClass());
         self::assertSame([
-                'testargument',
-                'Test',
-                10,
-                'su-icon'
+                '$someClass' => 'testargument',
+                '$navigationTitle' => 'Test',
+                '$position' => 10,
+                '$icon' => 'su-icon'
             ],
             $definition->getArguments());
     }

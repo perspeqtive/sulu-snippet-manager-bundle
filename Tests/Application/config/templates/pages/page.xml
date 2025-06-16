@@ -1,0 +1,31 @@
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+
+    <key>page</key>
+
+    <view>pages/page</view>
+    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title>Default</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line">
+            <meta>
+                <title>Title</title>
+            </meta>
+            <tag name="sulu.rlp.part"/>
+        </property>
+        <property name="url" type="resource_locator">
+            <meta>
+                <title>URL</title>
+            </meta>
+            <tag name="sulu.rlp"/>
+        </property>
+    </properties>
+</template>
