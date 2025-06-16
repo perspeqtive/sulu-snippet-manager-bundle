@@ -13,8 +13,8 @@ class ConfiguredSnippetAdminBuilder
      * @param array{
      *      navigation_title: string,
      *      type: string,
-     *      order?: int,
-     *      icon?: string
+     *      order: int,
+     *      icon: string
      * } $managerConfig
      */
     public function build(array $managerConfig, ContainerBuilder $container, ?string $parentName): Definition
@@ -23,8 +23,8 @@ class ConfiguredSnippetAdminBuilder
         $definition->setAbstract(false);
         $definition->addArgument($managerConfig['type']);
         $definition->addArgument($managerConfig['navigation_title']);
-        $definition->addArgument($managerConfig['order'] ?? null);
-        $definition->addArgument($managerConfig['icon'] ?? null);
+        $definition->addArgument($managerConfig['order']);
+        $definition->addArgument($managerConfig['icon']);
         $definition->addArgument($parentName);
 
         return $definition;

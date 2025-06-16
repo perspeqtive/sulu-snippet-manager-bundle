@@ -46,13 +46,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      * @param array{
      *      navigation_title: string,
      *      type: string,
-     *      order?: int,
-     *      icon?: string,
+     *      order: int,
+     *      icon: string,
      *      children?: array<array-key, array{
      *          navigation_title: string,
      *          type: string,
-     *          order?: int,
-     *          icon?: string
+     *          order: int,
+     *          icon: string
      *      }>
      * } $managerConfig
      */
@@ -80,13 +80,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *     array{
      *       navigation_title: string,
      *       type: string,
-     *       order?: int,
-     *       icon?: string,
+     *       order: int,
+     *       icon: string,
      *       children?: array<array-key, array{
      *           navigation_title: string,
      *           type: string,
-     *           order?: int,
-     *           icon?: string
+     *           order: int,
+     *           icon: string
      *       }>
      *     }
      * }

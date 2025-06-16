@@ -13,13 +13,13 @@ class ConfiguredParentDefinitionBuilder
      * @param array{
      *      navigation_title: string,
      *      type: string,
-     *      order?: int,
-     *      icon?: string,
+     *      order: int,
+     *      icon: string,
      *      children?: array<array-key, array{
      *          navigation_title: string,
-     *          type?: string,
-     *          order?: int,
-     *          icon?: string
+     *          type: string,
+     *          order: int,
+     *          icon: string
      *      }>
      * } $managerConfig
      */
@@ -27,8 +27,8 @@ class ConfiguredParentDefinitionBuilder
     {
         $definition = $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin');
         $definition->addArgument($managerConfig['navigation_title']);
-        $definition->addArgument($managerConfig['order'] ?? null);
-        $definition->addArgument($managerConfig['icon'] ?? null);
+        $definition->addArgument($managerConfig['order']);
+        $definition->addArgument($managerConfig['icon']);
 
         return $definition;
     }
