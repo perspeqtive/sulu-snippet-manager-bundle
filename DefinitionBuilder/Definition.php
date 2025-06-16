@@ -6,7 +6,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder;
 
 use Symfony\Component\DependencyInjection\Definition as BaseDefinition;
 
-class Definition extends BaseDefinition
+final class Definition extends BaseDefinition
 {
     public static function fromDefinition(BaseDefinition $definition): static
     {

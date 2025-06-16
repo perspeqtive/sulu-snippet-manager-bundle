@@ -46,7 +46,7 @@ class ConfiguredParentMenuAdmin extends Admin
     {
         $title = mb_strtolower($this->navigationTitle);
 
-        return preg_replace('~[^a-zA-Z0-9-]~', '', $title);
+        return (string) preg_replace('~[^a-zA-Z0-9-]~', '', $title);
     }
 
     public function getSecurityContexts(): array
