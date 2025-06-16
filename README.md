@@ -61,7 +61,7 @@ sulu_snippet_manager:
 | navigation_title |            yes            | Label shown in the admin menu                                                                                                             |
 | order            |            yes            | Sort order position                                                                                                                       |
 | icon             |            no             | Sulu icon name (e.g. su-settings)                                                                                                         |
-| type             |            yes            | The sulu snippet type, when it is not a nested parent config entry                                                                        |
+| type             |            yes            | The sulu snippet type, when it is not a nested parent config entry. When it is a parent entry, it should be a unique identifier           |
 | children         |            no             | Nested menu items — parent items with children act as groups without detail views, parents without children behave like normal list views |
 
 
