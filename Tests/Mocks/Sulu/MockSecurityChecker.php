@@ -10,7 +10,7 @@ class MockSecurityChecker implements SecurityCheckerInterface
 {
     public string $subjectName = '';
 
-    public function __construct(public bool $hasPermission = true)
+    public function __construct(public array $hasPermission = ['*' => true])
     {
     }
 
@@ -22,6 +22,7 @@ class MockSecurityChecker implements SecurityCheckerInterface
     {
         $this->subjectName = $subject;
 
-        return $this->hasPermission;
+        return (isset($this->hasPermission[$permission]) && $this->hasPermission[$permission] === true) ||
+            (isset($this->hasPermission['*']) && $this->hasPermission['*'] === true);
     }
 }

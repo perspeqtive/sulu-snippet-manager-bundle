@@ -39,7 +39,7 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureNavigationItemsWithoutPermission(): void
     {
-        $this->securityChecker->hasPermission = false;
+        $this->securityChecker->hasPermission = [];
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet');
         $navigationItemCollection = new NavigationItemCollection();
         $admin->configureNavigationItems($navigationItemCollection);
@@ -49,7 +49,6 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureNavigationItemWithParentNavigationNotFound(): void
     {
-        $this->securityChecker->hasPermission = false;
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
         $admin->configureNavigationItems($navigationItemCollection);
@@ -59,7 +58,6 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureNavigationItemIsBuild(): void
     {
-        $this->securityChecker->hasPermission = true;
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet');
         $navigationItemCollection = new NavigationItemCollection();
         $admin->configureNavigationItems($navigationItemCollection);
@@ -77,7 +75,6 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureNavigationItemIsBuildUnderParent(): void
     {
-        $this->securityChecker->hasPermission = true;
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
         $navigationItemCollection->add(new NavigationItem('parentNavigation'));
@@ -98,7 +95,6 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollection(): void
     {
-        $this->securityChecker->hasPermission = true;
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
         $navigationItemCollection->add(new NavigationItem('parentNavigation'));
@@ -171,7 +167,7 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollectionWithoutPermission(): void
     {
-        $this->securityChecker->hasPermission = false;
+        $this->securityChecker->hasPermission = [];
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
         $navigationItemCollection->add(new NavigationItem('parentNavigation'));
@@ -197,7 +193,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             ],
         ];
 
-        $this->securityChecker->hasPermission = false;
+        $this->securityChecker->hasPermission = [];
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $context = $admin->getSecurityContexts();
 

@@ -21,7 +21,7 @@ class ConfiguredParentMenuAdminTest extends TestCase
 
     public function testConfigureNavigationItemsWithoutPermission(): void
     {
-        $this->securityChecker->hasPermission = false;
+        $this->securityChecker->hasPermission = [];
 
         $admin = new ConfiguredParentMenuAdmin($this->securityChecker, 'Title', 10, 'su-icon');
 
@@ -33,8 +33,6 @@ class ConfiguredParentMenuAdminTest extends TestCase
 
     public function testConfigureNavigationItemsWithPermission(): void
     {
-        $this->securityChecker->hasPermission = true;
-
         $admin = new ConfiguredParentMenuAdmin($this->securityChecker, 'My Title', 10, 'su-icon');
 
         $navigationItemCollection = new NavigationItemCollection();
