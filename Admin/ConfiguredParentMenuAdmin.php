@@ -17,9 +17,9 @@ class ConfiguredParentMenuAdmin extends Admin
 {
     public function __construct(
         private readonly SecurityCheckerInterface $securityChecker,
-        private readonly string                   $navigationTitle,
-        private readonly int                      $position = 40,
-        private readonly string                   $icon = 'su-snippet',
+        private readonly string $navigationTitle,
+        private readonly int $position = 40,
+        private readonly string $icon = 'su-snippet',
     ) {
     }
 
@@ -38,12 +38,14 @@ class ConfiguredParentMenuAdmin extends Admin
     private function buildSecurityContext(): string
     {
         $cleanName = $this->buildCleanName();
+
         return 'sulu_snippet_manager_' . $cleanName . '_security_context';
     }
 
     private function buildCleanName(): string
     {
         $title = mb_strtolower($this->navigationTitle);
+
         return preg_replace('~[^a-zA-Z0-9-]~', '', $title);
     }
 

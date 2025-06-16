@@ -22,15 +22,15 @@ class ConfiguredSnippetAdmin extends Admin
 {
     public function __construct(
         private readonly ViewBuilderFactoryInterface $viewBuilderFactory,
-        private readonly SecurityCheckerInterface    $securityChecker,
+        private readonly SecurityCheckerInterface $securityChecker,
         private readonly LocalizationProviderInterface $localizationProvider,
         private readonly FormToolbarBuilderInterface $formToolbarBuilder,
         private readonly ListToolbarBuilderInterface $listToolbarBuilder,
-        private readonly string                      $snippetType,
-        private readonly string                      $navigationTitle,
-        private readonly int                         $position = 40,
-        private readonly string                      $icon = 'su-snippet',
-        private readonly ?string                     $parentNavigation = null,
+        private readonly string $snippetType,
+        private readonly string $navigationTitle,
+        private readonly int $position = 40,
+        private readonly string $icon = 'su-snippet',
+        private readonly ?string $parentNavigation = null,
     ) {
     }
 
@@ -45,6 +45,7 @@ class ConfiguredSnippetAdmin extends Admin
         }
 
         $navigationItem = new NavigationItem($this->navigationTitle);
+        $navigationItem->setLabel($this->navigationTitle);
         $navigationItem->setView($this->buildListViewName());
         $navigationItem->setIcon($this->icon);
         $navigationItem->setPosition($this->position);
@@ -146,8 +147,9 @@ class ConfiguredSnippetAdmin extends Admin
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildAddFormViewName(), '/' . $this->snippetType . '-snippets/:locale/add')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
+                ->addRouterAttributesToBackView(['locale'])
+                ->setBackView($this->buildListViewName())
                 ->addLocales($locales)
-                ->setBackView($this->buildListViewName()),
         );
     }
 
