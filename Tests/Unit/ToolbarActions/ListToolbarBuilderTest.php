@@ -12,7 +12,6 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 
 class ListToolbarBuilderTest extends TestCase
 {
-
     private MockSecurityChecker $securityChecker;
 
     protected function setUp(): void
@@ -20,7 +19,8 @@ class ListToolbarBuilderTest extends TestCase
         $this->securityChecker = new MockSecurityChecker();
     }
 
-    public function testBuild(): void {
+    public function testBuild(): void
+    {
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
         self::assertEquals([
@@ -30,7 +30,8 @@ class ListToolbarBuilderTest extends TestCase
         ], $toolbars);
     }
 
-    public function testBuildHasAddOnlyPermission(): void {
+    public function testBuildHasAddOnlyPermission(): void
+    {
         $this->securityChecker->hasPermission = [PermissionTypes::ADD => true];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
@@ -39,7 +40,8 @@ class ListToolbarBuilderTest extends TestCase
         ], $toolbars);
     }
 
-    public function testBuildHasDeleteOnlyPermission(): void {
+    public function testBuildHasDeleteOnlyPermission(): void
+    {
         $this->securityChecker->hasPermission = [PermissionTypes::DELETE => true];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
@@ -48,7 +50,8 @@ class ListToolbarBuilderTest extends TestCase
         ], $toolbars);
     }
 
-    public function testBuildHasViewOnlyPermission(): void {
+    public function testBuildHasViewOnlyPermission(): void
+    {
         $this->securityChecker->hasPermission = [PermissionTypes::VIEW => true];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
@@ -56,5 +59,4 @@ class ListToolbarBuilderTest extends TestCase
             new ToolbarAction('sulu_admin.export'),
         ], $toolbars);
     }
-
 }

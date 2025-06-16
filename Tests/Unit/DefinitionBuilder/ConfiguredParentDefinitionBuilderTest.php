@@ -12,14 +12,13 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class ConfiguredParentDefinitionBuilderTest extends TestCase
 {
-
-    public function testGenerate(): void {
+    public function testGenerate(): void
+    {
         $baseDefinition = new Definition(ConfiguredParentMenuAdmin::class, ['$someClass' => 'testargument']);
         $baseDefinition->setAbstract(true);
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->addDefinitions([
-            'perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin' =>
-                $baseDefinition
+            'perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin' => $baseDefinition,
         ]);
         $definitionBuilder = new ConfiguredParentDefinitionBuilder();
         $definition = $definitionBuilder->generate(['navigation_title' => 'Test', 'order' => 10, 'icon' => 'su-icon'], $containerBuilder);
@@ -28,13 +27,14 @@ class ConfiguredParentDefinitionBuilderTest extends TestCase
         self::assertFalse($definition->isAbstract());
 
         self::assertSame(ConfiguredParentMenuAdmin::class, $definition->getClass());
-        self::assertSame([
+        self::assertSame(
+            [
                 '$someClass' => 'testargument',
                 '$navigationTitle' => 'Test',
                 '$position' => 10,
-                '$icon' => 'su-icon'
+                '$icon' => 'su-icon',
             ],
-            $definition->getArguments());
+            $definition->getArguments(),
+        );
     }
-
 }

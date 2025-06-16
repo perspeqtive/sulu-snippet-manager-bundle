@@ -12,30 +12,31 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class ConfiguredSnippetAdminBuilderTest extends TestCase
 {
-    public function testGenerate(): void {
+    public function testGenerate(): void
+    {
         $baseDefinition = new Definition(ConfiguredSnippetAdmin::class, ['$someClass' => 'testargument']);
         $baseDefinition->setAbstract(true);
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->addDefinitions([
-            'perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin' =>
-                $baseDefinition
+            'perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin' => $baseDefinition,
         ]);
         $definitionBuilder = new ConfiguredSnippetAdminBuilder();
-        $definition = $definitionBuilder->build([ 'navigation_title' => 'Test', 'type' => 'shop','order' => 10, 'icon' => 'su-icon'], $containerBuilder, 'testparent');
+        $definition = $definitionBuilder->build(['navigation_title' => 'Test', 'type' => 'shop', 'order' => 10, 'icon' => 'su-icon'], $containerBuilder, 'testparent');
 
         self::assertTrue($baseDefinition->isAbstract());
         self::assertFalse($definition->isAbstract());
 
         self::assertSame(ConfiguredSnippetAdmin::class, $definition->getClass());
-        self::assertSame([
-            '$someClass' =>'testargument',
-            '$snippetType' =>'shop',
-            '$navigationTitle' =>'Test',
-            '$position' =>10,
-            '$icon' =>'su-icon',
-            '$parentNavigation' =>'testparent'
-        ],
-            $definition->getArguments());
+        self::assertSame(
+            [
+                '$someClass' => 'testargument',
+                '$snippetType' => 'shop',
+                '$navigationTitle' => 'Test',
+                '$position' => 10,
+                '$icon' => 'su-icon',
+                '$parentNavigation' => 'testparent',
+            ],
+            $definition->getArguments(),
+        );
     }
-
 }

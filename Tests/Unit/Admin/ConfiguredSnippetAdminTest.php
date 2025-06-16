@@ -10,15 +10,12 @@ use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\MockFormToolbarBuilder;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\MockListToolbarBuilder;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockLocalizationProvider;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockSecurityChecker;
-use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockViewBuilderFactory;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Component\Security\Authorization\PermissionTypes;
-use function print_r;
 
 class ConfiguredSnippetAdminTest extends TestCase
 {
@@ -115,7 +112,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             'path' => '/testsnippet-snippets/:locale/:id',
             'routerAttributesToBackView' => ['locale'],
             'backView' => 'sulu_snippet_manager_testsnippet.list',
-            'locales' => ['de', 'en']
+            'locales' => ['de', 'en'],
         ], $editView->getView());
 
         $addView = $views['sulu_snippet_manager_testsnippet.add'];
@@ -124,7 +121,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             'path' => '/testsnippet-snippets/:locale/add',
             'routerAttributesToBackView' => ['locale'],
             'backView' => 'sulu_snippet_manager_testsnippet.list',
-            'locales' => ['de', 'en']
+            'locales' => ['de', 'en'],
         ], $addView->getView());
 
         $listView = $views['sulu_snippet_manager_testsnippet.list'];
@@ -205,9 +202,8 @@ class ConfiguredSnippetAdminTest extends TestCase
         string $navigationTitle,
         int $position = 10,
         string $icon = 'su-icon',
-        ?string $parentNavigation = null
-    ): ConfiguredSnippetAdmin
-    {
+        ?string $parentNavigation = null,
+    ): ConfiguredSnippetAdmin {
         return new ConfiguredSnippetAdmin(
             $this->viewBuilderFactory,
             $this->securityChecker,
@@ -221,6 +217,4 @@ class ConfiguredSnippetAdminTest extends TestCase
             $parentNavigation,
         );
     }
-
-
 }

@@ -149,7 +149,7 @@ class ConfiguredSnippetAdmin extends Admin
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
                 ->setBackView($this->buildListViewName())
-                ->addLocales($locales)
+                ->addLocales($locales),
         );
     }
 

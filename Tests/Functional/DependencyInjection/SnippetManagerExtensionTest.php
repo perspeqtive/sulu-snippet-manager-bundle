@@ -6,12 +6,12 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Functional\DependencyInject
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+use function restore_exception_handler;
+
 class SnippetManagerExtensionTest extends KernelTestCase
 {
-
-
-    public function testLoad(): void {
-
+    public function testLoad(): void
+    {
         $settings = static::getContainer()->getParameter('sulu_snippet_manager.navigation');
         self::assertSame([
             'configuration' => [
@@ -31,7 +31,7 @@ class SnippetManagerExtensionTest extends KernelTestCase
                         'type' => 'account',
                         'order' => 43,
                         'icon' => 'su-account',
-                    ]
+                    ],
                 ],
             ],
             'services' => [
@@ -39,10 +39,9 @@ class SnippetManagerExtensionTest extends KernelTestCase
                 'type' => 'services',
                 'order' => 41,
                 'icon' => 'su-services',
-                'children' => []
-            ]
+                'children' => [],
+            ],
         ], $settings);
-
     }
 
     protected function tearDown(): void
@@ -50,6 +49,4 @@ class SnippetManagerExtensionTest extends KernelTestCase
         restore_exception_handler();
         parent::tearDown();
     }
-
-
 }

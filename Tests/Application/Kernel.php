@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Application;
 
+use Exception;
 use PERSPEQTIVE\SuluSnippetManagerBundle\SuluSnippetManagerBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class Kernel extends SuluTestKernel
 {
@@ -24,7 +25,7 @@ class Kernel extends SuluTestKernel
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {

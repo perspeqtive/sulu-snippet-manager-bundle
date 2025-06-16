@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Functional\DependencyInjection;
 
+use Exception;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\View;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+use function restore_exception_handler;
+use function sprintf;
+
 class RegisterManagersCompilerPassTest extends KernelTestCase
 {
-
-
     private static function assertHasView(string $name, ViewRegistry $viewRegistry)
     {
         try {
             $view = $viewRegistry->findViewByName($name);
             self::assertInstanceOf(View::class, $view);
-        } catch(\Exception) {
+        } catch (Exception) {
             self::fail(sprintf('View "%s" does not exist.', $name));
         }
     }
 
-    public function testNavigationItemsAreCreated(): void {
-
+    public function testNavigationItemsAreCreated(): void
+    {
         /** @var NavigationRegistry $navigationRegistry */
         $navigationRegistry = static::getContainer()->get('sulu_admin.navigation_registry');
 
@@ -61,11 +63,10 @@ class RegisterManagersCompilerPassTest extends KernelTestCase
         self::assertSame('sulu_snippet_manager_account.list', $item->getView());
         self::assertSame(43, $item->getPosition());
         self::assertCount(0, $item->getChildren());
-
     }
 
-    public function testViewsAreCreated(): void {
-
+    public function testViewsAreCreated(): void
+    {
         /** @var ViewRegistry $viewRegistry */
         $viewRegistry = static::getContainer()->get('sulu_admin.view_registry');
 
@@ -86,11 +87,7 @@ class RegisterManagersCompilerPassTest extends KernelTestCase
         self::assertHasView('sulu_snippet_manager_services.add', $viewRegistry);
         self::assertHasView('sulu_snippet_manager_services.add.details', $viewRegistry);
         self::assertHasView('sulu_snippet_manager_services.list', $viewRegistry);
-
-
-
     }
-
 
     public function getItemByName(string $name, NavigationRegistry $navigationRegistry): NavigationItem
     {
@@ -108,6 +105,4 @@ class RegisterManagersCompilerPassTest extends KernelTestCase
         restore_exception_handler();
         parent::tearDown();
     }
-
-
 }
