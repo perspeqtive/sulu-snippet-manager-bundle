@@ -28,7 +28,8 @@ class ConfiguredParentMenuAdmin extends Admin
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::VIEW) === false) {
             return;
         }
-        $configurationItem = new NavigationItem($this->navigationTitle);
+        $configurationItem = new NavigationItem('sulu_snippet_manager_' . $this->buildCleanName());
+        $configurationItem->setLabel($this->navigationTitle);
         $configurationItem->setPosition($this->position);
         $configurationItem->setIcon($this->icon);
         $navigationItemCollection->add($configurationItem);
@@ -36,10 +37,14 @@ class ConfiguredParentMenuAdmin extends Admin
 
     private function buildSecurityContext(): string
     {
-        $title = mb_strtolower($this->navigationTitle);
-        $title = preg_replace('~[^a-zA-Z0-9-]~', '', $title);
+        $cleanName = $this->buildCleanName();
+        return 'sulu_snippet_manager_' . $cleanName . '_security_context';
+    }
 
-        return 'sulu_snippet_manager_' . $title . '_security_context';
+    private function buildCleanName(): string
+    {
+        $title = mb_strtolower($this->navigationTitle);
+        return preg_replace('~[^a-zA-Z0-9-]~', '', $title);
     }
 
     public function getSecurityContexts(): array
