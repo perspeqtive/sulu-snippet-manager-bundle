@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Admin;
 
-use PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\FormToolbarBuilder;
-use PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\ListToolbarBuilder;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -24,6 +23,7 @@ class ConfiguredSnippetAdmin extends Admin
     public function __construct(
         private readonly ViewBuilderFactoryInterface $viewBuilderFactory,
         private readonly SecurityCheckerInterface    $securityChecker,
+        private readonly LocalizationProviderInterface $localizationProvider,
         private readonly FormToolbarBuilderInterface $formToolbarBuilder,
         private readonly ListToolbarBuilderInterface $listToolbarBuilder,
         private readonly string                      $snippetType,
@@ -84,8 +84,7 @@ class ConfiguredSnippetAdmin extends Admin
                 )
                 ->setAddView($this->buildAddFormViewName())
                 ->setEditView($this->buildEditFormViewName())
-                ->setDefaultLocale('de')
-                ->addLocales(['de', 'en'])
+                ->addLocales($this->localizationProvider->getAllLocales())
                 ->enableFiltering()
                 ->addRequestParameters(['types' => $this->snippetType]),
         );
@@ -133,20 +132,21 @@ class ConfiguredSnippetAdmin extends Admin
         if ($this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false) {
             return;
         }
+        $locales = $this->localizationProvider->getAllLocales();
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildEditFormViewName(), '/' . $this->snippetType . '-snippets/:locale/:id')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
                 ->setBackView($this->buildListViewName())
-                ->addLocales(['de', 'en'])
+                ->addLocales($locales)
                 ->setTitleProperty('title'),
         );
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildAddFormViewName(), '/' . $this->snippetType . '-snippets/:locale/add')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
-                ->addLocales(['de', 'en'])
+                ->addLocales($locales)
                 ->setBackView($this->buildListViewName()),
         );
     }

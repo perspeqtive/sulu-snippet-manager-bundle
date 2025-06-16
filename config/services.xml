@@ -16,6 +16,7 @@
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin" id="perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin" abstract="true">
             <argument key="$viewBuilderFactory" id="sulu_admin.view_builder_factory" type="service"/>
             <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
+            <argument key="$localizationProvider" id="sulu.core.localization_manager.core_provider.class" type="service"/>
             <argument key="$formToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.form_toolbar_builder" type="service"/>
             <argument key="$listToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder" type="service"/>
             <tag name="sulu.admin"/>
