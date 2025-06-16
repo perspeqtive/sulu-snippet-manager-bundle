@@ -4,84 +4,96 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\DependencyInjection;
 
-use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin;
-use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder\ConfiguredParentDefinitionBuilder;
+use PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder\ConfiguredSnippetAdminBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use function count;
 
 class RegisterManagersCompilerPass implements CompilerPassInterface
 {
+    private ConfiguredParentDefinitionBuilder $configuredParentDefinitionBuilder;
+    private ConfiguredSnippetAdminBuilder $configuredSnippetAdminDefinitionBuilder;
+
+    public function __construct()
+    {
+        $this->configuredParentDefinitionBuilder = new ConfiguredParentDefinitionBuilder();
+        $this->configuredSnippetAdminDefinitionBuilder = new ConfiguredSnippetAdminBuilder();
+    }
+
     public function process(ContainerBuilder $container): void
     {
-
-        if (
-            $container->hasDefinition('sulu_admin.view_builder_factory') === false ||
-            $container->hasDefinition('sulu_security.security_checker') === false
-        ) {
+        if ($this->shouldBeExecuted($container) === false) {
             return;
         }
-        $viewBuilderFactory = $container->getDefinition('sulu_admin.view_builder_factory');
-        $securityChecker = $container->getDefinition('sulu_security.security_checker');
 
-        $snippetsAsManagers = $container->getParameter('sulu_snippet_manager.snippets');
+        $snippetsAsManagers = $this->fetchConfiguredTree($container);
 
         foreach ($snippetsAsManagers as $managerConfig) {
-            $this->addConfigToContainer($managerConfig, $container, $viewBuilderFactory, $securityChecker);
+            $this->addConfigToContainer($managerConfig, $container);
         }
     }
 
-    private function buildDefinitionForParentMenuItem(array $managerConfig, Definition $securityChecker): Definition {
-        $definition = new Definition(
-            ConfiguredParentMenuAdmin::class,
-            [
-                $securityChecker,
-                $managerConfig['navigation_title'],
-                $managerConfig['order'],
-                $managerConfig['icon']
-            ]
-        );
-        $definition->addTag('sulu.context', ['context' => 'admin']);
-        $definition->addTag('sulu.admin');
-        return $definition;
-    }
-
-    private function buildDefinitionForSnippet(array $managerConfig, Definition $viewBuilderFactory, Definition $securityChecker, ?string $parentName = null): Definition
+    private function shouldBeExecuted(ContainerBuilder $container): bool
     {
-        $definition = new Definition(
-            ConfiguredSnippetAdmin::class,
-            [
-                $viewBuilderFactory,
-                $securityChecker,
-                $managerConfig['type'],
-                $managerConfig['navigation_title'],
-                $managerConfig['order'],
-                $managerConfig['icon'],
-                $parentName
-            ]
-        );
-        $definition->addTag('sulu.context', ['context' => 'admin']);
-        $definition->addTag('sulu.admin');
-        return $definition;
+        return $container->hasDefinition('sulu_admin.view_builder_factory') === true
+            && $container->hasDefinition('sulu_security.security_checker') === true
+            && $container->hasParameter('sulu_snippet_manager.snippets') === true;
     }
 
-    public function addConfigToContainer(array $managerConfig, ContainerBuilder $container, Definition $viewBuilderFactory, Definition $securityChecker, ?string $parentName = null): void
+    /**
+     * @param array{
+     *      navigation_title: string,
+     *      type: string,
+     *      order?: int,
+     *      icon?: string,
+     *      children?: array<array-key, array{
+     *          navigation_title: string,
+     *          type: string,
+     *          order?: int,
+     *          icon?: string
+     *      }>
+     * } $managerConfig
+     */
+    private function addConfigToContainer(array $managerConfig, ContainerBuilder $container, ?string $parentName = null): void
     {
         if (isset($managerConfig['children']) && count($managerConfig['children']) > 0) {
             $container->setDefinition(
                 'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-                $this->buildDefinitionForParentMenuItem($managerConfig, $securityChecker)
+                $this->configuredParentDefinitionBuilder->generate($managerConfig, $container),
             );
-            foreach($managerConfig['children'] as $childConfig) {
-                $this->addConfigToContainer($childConfig, $container, $viewBuilderFactory, $securityChecker, $managerConfig['navigation_title']);
+            foreach ($managerConfig['children'] as $childConfig) {
+                $this->addConfigToContainer($childConfig, $container, $managerConfig['navigation_title']);
             }
+
             return;
         }
         $container->setDefinition(
             'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-            $this->buildDefinitionForSnippet($managerConfig, $viewBuilderFactory, $securityChecker, $parentName)
+            $this->configuredSnippetAdminDefinitionBuilder->build($managerConfig, $container, $parentName),
         );
     }
 
-
+    /**
+     * @return array{
+     *     array{
+     *       navigation_title: string,
+     *       type: string,
+     *       order?: int,
+     *       icon?: string,
+     *       children?: array<array-key, array{
+     *           navigation_title: string,
+     *           type: string,
+     *           order?: int,
+     *           icon?: string
+     *       }>
+     *     }
+     * }
+     */
+    public function fetchConfiguredTree(ContainerBuilder $container): array
+    {
+        // @phpstan-ignore-next-line
+        return $container->getParameter('sulu_snippet_manager.snippets');
+    }
 }

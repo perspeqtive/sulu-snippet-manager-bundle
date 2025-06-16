@@ -10,15 +10,18 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
+use function mb_strtolower;
+use function preg_replace;
+
 class ConfiguredParentMenuAdmin extends Admin
 {
-
     public function __construct(
         private SecurityCheckerInterface $securityChecker,
-        private readonly string                      $navigationTitle,
-        private readonly int                         $position = 40,
-        private readonly string                      $icon = 'su-snippet',
-    ) {}
+        private readonly string $navigationTitle,
+        private readonly int $position = 40,
+        private readonly string $icon = 'su-snippet',
+    ) {
+    }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
@@ -29,14 +32,14 @@ class ConfiguredParentMenuAdmin extends Admin
         $configurationItem->setPosition($this->position);
         $configurationItem->setIcon($this->icon);
         $navigationItemCollection->add($configurationItem);
-
     }
 
     private function buildSecurityContext(): string
     {
         $title = mb_strtolower($this->navigationTitle);
         $title = preg_replace('~[^a-zA-Z0-9-]~', '', $title);
-        return  'sulu_snippet_manager_' . $title . '_security_context';
+
+        return 'sulu_snippet_manager_' . $title . '_security_context';
     }
 
     public function getSecurityContexts(): array
@@ -52,8 +55,8 @@ class ConfiguredParentMenuAdmin extends Admin
         ];
     }
 
-    public static function getPriority(): int {
+    public static function getPriority(): int
+    {
         return 100;
     }
-
 }

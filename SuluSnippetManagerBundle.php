@@ -11,11 +11,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluSnippetManagerBundle extends Bundle
 {
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
         $container->addCompilerPass(new RegisterManagersCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
     }
-
 }
