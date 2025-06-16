@@ -1,0 +1,13 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+    paths:
+        - .
+    level: max
+    excludePaths:
+        - %currentWorkingDirectory%/vendor/*
+        - %currentWorkingDirectory%/Tests/*
+        - %currentWorkingDirectory%/DependencyInjection/Configuration.php
