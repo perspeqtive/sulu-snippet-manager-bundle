@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions;
 
+use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\FormToolbarBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -11,7 +12,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 use function str_ends_with;
 
-readonly class FormToolbarBuilder
+readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
 {
     public function __construct(private SecurityCheckerInterface $securityChecker)
     {

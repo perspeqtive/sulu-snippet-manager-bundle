@@ -23,14 +23,14 @@ class ConfiguredSnippetAdmin extends Admin
 {
     public function __construct(
         private readonly ViewBuilderFactoryInterface $viewBuilderFactory,
-        private readonly SecurityCheckerInterface $securityChecker,
-        private readonly FormToolbarBuilder $formToolbarBuilder,
-        private readonly ListToolbarBuilder $listToolbarBuilder,
-        private readonly string $snippetType,
-        private readonly string $navigationTitle,
-        private readonly int $position = 40,
-        private readonly string $icon = 'su-snippet',
-        private readonly ?string $parentNavigation = null,
+        private readonly SecurityCheckerInterface    $securityChecker,
+        private readonly FormToolbarBuilderInterface $formToolbarBuilder,
+        private readonly ListToolbarBuilderInterface $listToolbarBuilder,
+        private readonly string                      $snippetType,
+        private readonly string                      $navigationTitle,
+        private readonly int                         $position = 40,
+        private readonly string                      $icon = 'su-snippet',
+        private readonly ?string                     $parentNavigation = null,
     ) {
     }
 

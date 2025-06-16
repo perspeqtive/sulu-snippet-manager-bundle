@@ -16,10 +16,10 @@ use function preg_replace;
 class ConfiguredParentMenuAdmin extends Admin
 {
     public function __construct(
-        private SecurityCheckerInterface $securityChecker,
-        private readonly string $navigationTitle,
-        private readonly int $position = 40,
-        private readonly string $icon = 'su-snippet',
+        private readonly SecurityCheckerInterface $securityChecker,
+        private readonly string                   $navigationTitle,
+        private readonly int                      $position = 40,
+        private readonly string                   $icon = 'su-snippet',
     ) {
     }
 

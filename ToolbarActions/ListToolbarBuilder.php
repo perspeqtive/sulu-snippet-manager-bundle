@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions;
 
+use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ListToolbarBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-readonly class ListToolbarBuilder
+readonly class ListToolbarBuilder implements ListToolbarBuilderInterface
 {
     public function __construct(private SecurityCheckerInterface $securityChecker)
     {
