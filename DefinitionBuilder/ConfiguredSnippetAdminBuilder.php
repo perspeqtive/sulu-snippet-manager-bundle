@@ -19,7 +19,7 @@ class ConfiguredSnippetAdminBuilder
      */
     public function build(array $managerConfig, ContainerBuilder $container, ?string $parentName): Definition
     {
-        $definition = $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin');
+        $definition = clone $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin');
         $definition->setAbstract(false);
         $definition->addArgument($managerConfig['type']);
         $definition->addArgument($managerConfig['navigation_title']);

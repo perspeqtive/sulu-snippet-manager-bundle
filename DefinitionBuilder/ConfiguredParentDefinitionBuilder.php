@@ -25,7 +25,8 @@ class ConfiguredParentDefinitionBuilder
      */
     public function generate(array $managerConfig, ContainerBuilder $container): Definition
     {
-        $definition = $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin');
+        $definition = clone $container->getDefinition('perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin');
+        $definition->setAbstract(false);
         $definition->addArgument($managerConfig['navigation_title']);
         $definition->addArgument($managerConfig['order']);
         $definition->addArgument($managerConfig['icon']);
