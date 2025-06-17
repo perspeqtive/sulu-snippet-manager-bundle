@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Access;
 
-use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Exception;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -12,19 +13,16 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use function array_pop;
-use function count;
-use function in_array;
 use function is_string;
 use function str_contains;
+use function str_starts_with;
 
-class AccessControlManager implements AccessControlManagerInterface
+readonly class AccessControlManager implements AccessControlManagerInterface
 {
-    private ?DocumentManagerInterface $documentManager = null;
-
     public function __construct(
-        private readonly AccessControlManagerInterface $accessControlManager,
-        private readonly RequestStack $requestStack,
+        private AccessControlManagerInterface $accessControlManager,
+        private RequestStack $requestStack,
+        private DocumentManagerInterface $documentManager,
     ) {
     }
 
@@ -80,9 +78,12 @@ class AccessControlManager implements AccessControlManagerInterface
 
     private function reconstructSnippetTypeFromRequest(Request $request): string
     {
+        /** @var ?string $route */
+        $route = $request->attributes->get('_route');
         if (
-            in_array($request->attributes->get('_route'), ['sulu_snippet.get_snippet', 'sulu_snippet.put_snippet'], true) === false
-            || $this->documentManager instanceof SnippetRepository === false) {
+            $route !== null
+            && str_starts_with($route, 'sulu_snippet.') === false
+        ) {
             return '';
         }
 
@@ -90,19 +91,18 @@ class AccessControlManager implements AccessControlManagerInterface
         $suluAttributes = $request->attributes->get('_sulu');
         /** @var ?string $locale */
         $locale = $suluAttributes?->getAttribute('locale');
-        if (empty($locale) === true) {
-            return '';
-        }
-
+        /** @var string $id */
         $id = $request->attributes->get('id', 'none');
-        $snippets = $this->documentManager->find($id, $locale);
-        if (count($snippets) !== 1) {
-            return '';
+
+        try {
+            /** @var SnippetDocument $snippet */
+            $snippet = $this->documentManager->find($id, $locale);
+
+            return (string) $snippet->getStructureType();
+        } catch (Exception) {
         }
 
-        $snippet = array_pop($snippets);
-
-        return (string) $snippet->getStructureType();
+        return '';
     }
 
     private function buildSecurityCondition(string $type, SecurityCondition $securityCondition): SecurityCondition
@@ -144,10 +144,5 @@ class AccessControlManager implements AccessControlManagerInterface
     public function getPermissions($type, $identifier): array
     {
         return $this->accessControlManager->getPermissions($type, $identifier);
-    }
-
-    public function setDocumentManager(DocumentManagerInterface $documentManager): void
-    {
-        $this->documentManager = $documentManager;
     }
 }

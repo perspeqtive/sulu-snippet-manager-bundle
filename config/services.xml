@@ -25,9 +25,7 @@
                  decorates="sulu_security.access_control_manager">
             <argument key="$accessControlManager" type="service" id=".inner"/>
             <argument key="$requestStack" type="service" id="request_stack"/>
-            <call method="setDocumentManager">
-                <argument type="service" id="sulu_document_manager.document_manager"/>
-            </call>
+            <argument key="$documentManager" type="service" id="sulu_document_manager.document_manager"/>
         </service>
 
     </services>
