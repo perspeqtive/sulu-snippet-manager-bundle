@@ -8,6 +8,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+use function count;
+
 class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
@@ -23,10 +25,16 @@ class Configuration implements ConfigurationInterface
                     ->arrayPrototype()
                         ->children()
                             ->scalarNode('navigation_title')->isRequired()->end()
-                            ->scalarNode('type')->isRequired()->end()
+                            ->scalarNode('type')->defaultNull()->end()
                             ->integerNode('order')->defaultValue(0)->end()
                             ->scalarNode('icon')->defaultValue('su-snippet')->end()
                             ->append($this->addChildrenNode())
+                        ->end()
+                        ->validate()
+                            ->ifTrue(function ($config) {
+                                return $this->isInvalidNavigationEntry($config);
+                            })
+                            ->thenInvalid("The 'type' must be defined when no children are given.")
                         ->end()
                     ->end()
                 ->end()
@@ -51,5 +59,13 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         return $node;
+    }
+
+    private function isInvalidNavigationEntry(array $config): bool
+    {
+        $hasChildren = isset($config['children']) && count($config['children']) > 0;
+        $hasType = isset($config['type']);
+
+        return !$hasChildren && !$hasType;
     }
 }

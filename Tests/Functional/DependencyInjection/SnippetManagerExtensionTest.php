@@ -18,7 +18,6 @@ class SnippetManagerExtensionTest extends KernelTestCase
                 'navigation_title' => 'configuration',
                 'order' => 39,
                 'icon' => 'su-news',
-                'type' => 'configuration',
                 'children' => [
                     'settings' => [
                         'navigation_title' => 'Settings',
@@ -33,6 +32,7 @@ class SnippetManagerExtensionTest extends KernelTestCase
                         'icon' => 'su-account',
                     ],
                 ],
+                'type' => null,
             ],
             'services' => [
                 'navigation_title' => 'Services',

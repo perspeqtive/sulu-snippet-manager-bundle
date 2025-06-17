@@ -4,7 +4,6 @@ sulu_snippet_manager:
       navigation_title: "configuration"
       order: 39
       icon: "su-news"
-      type: configuration
       children:
         settings:
           navigation_title: "Settings"
