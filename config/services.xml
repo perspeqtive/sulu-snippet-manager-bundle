@@ -17,6 +17,8 @@
             <argument key="$localizationProvider" id="sulu_core.webspace.webspace_manager" type="service"/>
             <argument key="$formToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.form_toolbar_builder" type="service"/>
             <argument key="$listToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder" type="service"/>
+            <argument key="$activityViewBuilderFactory" id="sulu_activity.activity_list_view_builder_factory" type="service"/>
+            <argument key="$referenceViewBuilderFactory" id="sulu_reference.reference_list_view_builder_factory" type="service"/>
             <tag name="sulu.context"  context="admin"/>
         </service>
 

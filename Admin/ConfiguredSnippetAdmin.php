@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Admin;
 
+use PERSPEQTIVE\SuluSnippetManagerBundle\Security\PermissionTypes;
+use PERSPEQTIVE\SuluSnippetManagerBundle\View\ViewTypes;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactoryInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 use function explode;
@@ -26,6 +29,8 @@ class ConfiguredSnippetAdmin extends Admin
         private readonly LocalizationProviderInterface $localizationProvider,
         private readonly FormToolbarBuilderInterface $formToolbarBuilder,
         private readonly ListToolbarBuilderInterface $listToolbarBuilder,
+        private readonly ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
+        private readonly ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory,
         private readonly string $snippetType,
         private readonly string $navigationTitle,
         private readonly int $position = 40,
@@ -46,7 +51,7 @@ class ConfiguredSnippetAdmin extends Admin
 
         $navigationItem = new NavigationItem($this->navigationTitle);
         $navigationItem->setLabel($this->navigationTitle);
-        $navigationItem->setView($this->buildListViewName());
+        $navigationItem->setView($this->buildViewName(ViewTypes::LIST));
         $navigationItem->setIcon($this->icon);
         $navigationItem->setPosition($this->position);
 
@@ -65,6 +70,8 @@ class ConfiguredSnippetAdmin extends Admin
         $this->buildResourceTabViews($viewCollection);
         $this->buildOverviewViewTemplates($viewCollection);
         $this->buildFormViewTemplates($viewCollection);
+        $this->buildTaxonomiesView($viewCollection);
+        $this->buildInsightsView($viewCollection);
     }
 
     private function buildOverviewViewTemplates(ViewCollection $viewCollection): void
@@ -74,7 +81,7 @@ class ConfiguredSnippetAdmin extends Admin
         }
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createListViewBuilder($this->buildListViewName(), '/' . $this->snippetType . '-snippets/:locale')
+                ->createListViewBuilder($this->buildViewName(ViewTypes::LIST), '/' . $this->snippetType . '-snippets/:locale')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->setListKey('snippets')
                 ->setTitle($this->buildName())
@@ -83,8 +90,8 @@ class ConfiguredSnippetAdmin extends Admin
                 ->addToolbarActions(
                     $this->listToolbarBuilder->build($this->buildSecurityContext()),
                 )
-                ->setAddView($this->buildAddFormViewName())
-                ->setEditView($this->buildEditFormViewName())
+                ->setAddView($this->buildViewName(ViewTypes::ADD))
+                ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addLocales($this->localizationProvider->getAllLocales())
                 ->enableFiltering()
                 ->addRequestParameters(['types' => $this->snippetType]),
@@ -97,34 +104,34 @@ class ConfiguredSnippetAdmin extends Admin
             return;
         }
         $viewCollection->add(
-            $this->viewBuilderFactory->createFormViewBuilder($this->buildAddFormViewName() . '.details', '/details')
+            $this->viewBuilderFactory->createFormViewBuilder($this->buildViewName(ViewTypes::ADD) . '.details', '/details')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
-                ->setEditView($this->buildEditFormViewName())
+                ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
                         $this->buildSecurityContext(),
-                        $this->buildAddFormViewName(),
+                        $this->buildViewName(ViewTypes::ADD),
                     ),
                 )
-                ->setParent($this->buildAddFormViewName()),
+                ->setParent($this->buildViewName(ViewTypes::ADD)),
         );
 
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createFormViewBuilder($this->buildEditFormViewName() . '.details', '/details')
+                ->createFormViewBuilder($this->buildViewName(ViewTypes::EDIT) . '.details', '/details')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
-                ->setEditView($this->buildEditFormViewName())
+                ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
                         $this->buildSecurityContext(),
-                        $this->buildEditFormViewName(),
+                        $this->buildViewName(ViewTypes::EDIT),
                     ),
                 )
-                ->setParent($this->buildEditFormViewName()),
+                ->setParent($this->buildViewName(ViewTypes::EDIT)),
         );
     }
 
@@ -136,21 +143,91 @@ class ConfiguredSnippetAdmin extends Admin
         $locales = $this->localizationProvider->getAllLocales();
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createResourceTabViewBuilder($this->buildEditFormViewName(), '/' . $this->snippetType . '-snippets/:locale/:id')
+                ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::EDIT), '/' . $this->snippetType . '-snippets/:locale/:id')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
-                ->setBackView($this->buildListViewName())
+                ->setBackView($this->buildViewName(ViewTypes::LIST))
                 ->addLocales($locales)
                 ->setTitleProperty('title'),
         );
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createResourceTabViewBuilder($this->buildAddFormViewName(), '/' . $this->snippetType . '-snippets/:locale/add')
+                ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::ADD), '/' . $this->snippetType . '-snippets/:locale/add')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
-                ->setBackView($this->buildListViewName())
+                ->setBackView($this->buildViewName(ViewTypes::LIST))
                 ->addLocales($locales),
         );
+    }
+
+    private function buildTaxonomiesView(ViewCollection $viewCollection): void
+    {
+        if (
+            $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false
+            || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::TAXONOMIES) === false
+        ) {
+            return;
+        }
+        $viewCollection->add(
+            $this->viewBuilderFactory
+                ->createFormViewBuilder($this->buildViewName(ViewTypes::TAXONOMIES), '/taxonomies')
+                ->setResourceKey(SnippetDocument::RESOURCE_KEY)
+                ->setFormKey('snippet_taxonomies')
+                ->setTabTitle('sulu_snippet.taxonomies')
+                ->addToolbarActions(
+                    $this->formToolbarBuilder->build(
+                        $this->buildSecurityContext(),
+                        $this->buildViewName(ViewTypes::TAXONOMIES),
+                    ),
+                )
+                ->setTitleVisible(true)
+                ->setParent($this->buildViewName(ViewTypes::EDIT)),
+        );
+    }
+
+    private function buildInsightsView(ViewCollection $viewCollection): void
+    {
+        if (
+            $this->hasInsightsSubViewPermissions() === false
+            || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false
+            || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::INSIGHTS) === false
+        ) {
+            return;
+        }
+
+        $viewCollection->add(
+            $this->viewBuilderFactory
+                ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::INSIGHTS), '/insights')
+                ->setResourceKey(SnippetDocument::RESOURCE_KEY)
+                ->setTabOrder(6144)
+                ->setTabTitle('sulu_admin.insights')
+                ->setTitleProperty('')
+                ->setParent($this->buildViewName(ViewTypes::EDIT)),
+        );
+
+        if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+            $viewCollection->add(
+                $this->activityViewBuilderFactory
+                    ->createActivityListViewBuilder(
+                        $this->buildViewName(ViewTypes::INSIGHTS) . '.activity',
+                        '/activities',
+                        SnippetDocument::RESOURCE_KEY,
+                    )
+                    ->setParent($this->buildViewName(ViewTypes::INSIGHTS)),
+            );
+        }
+
+        if ($this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+            $viewCollection->add(
+                $this->referenceViewBuilderFactory
+                    ->createReferenceListViewBuilder(
+                        $this->buildViewName(ViewTypes::INSIGHTS) . '.reference',
+                        '/references',
+                        SnippetDocument::RESOURCE_KEY,
+                    )
+                    ->setParent($this->buildViewName(ViewTypes::INSIGHTS)),
+            );
+        }
     }
 
     private function buildName(): string
@@ -163,19 +240,15 @@ class ConfiguredSnippetAdmin extends Admin
         return 'sulu_snippet_manager_' . $this->snippetType . '_security_context';
     }
 
-    private function buildListViewName(): string
+    private function buildViewName(string $type): string
     {
-        return 'sulu_snippet_manager_' . $this->snippetType . '.list';
+        return 'sulu_snippet_manager_' . $this->snippetType . '.' . $type;
     }
 
-    private function buildAddFormViewName(): string
+    private function hasInsightsSubViewPermissions(): bool
     {
-        return 'sulu_snippet_manager_' . $this->snippetType . '.add';
-    }
-
-    private function buildEditFormViewName(): string
-    {
-        return 'sulu_snippet_manager_' . $this->snippetType . '.edit';
+        return $this->activityViewBuilderFactory->hasActivityListPermission()
+            || $this->referenceViewBuilderFactory->hasReferenceListPermission();
     }
 
     public function getSecurityContexts(): array
@@ -188,6 +261,8 @@ class ConfiguredSnippetAdmin extends Admin
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
+                        PermissionTypes::TAXONOMIES,
+                        PermissionTypes::INSIGHTS,
                     ],
                 ],
             ],

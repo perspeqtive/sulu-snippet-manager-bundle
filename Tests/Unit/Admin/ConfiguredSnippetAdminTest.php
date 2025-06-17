@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Unit\Admin;
 
 use PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin;
+use PERSPEQTIVE\SuluSnippetManagerBundle\Security\PermissionTypes;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Assert\AssertView;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\MockFormToolbarBuilder;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\MockListToolbarBuilder;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockLocalizationProvider;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockSecurityChecker;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
-use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactory;
 
 class ConfiguredSnippetAdminTest extends TestCase
 {
@@ -24,6 +26,8 @@ class ConfiguredSnippetAdminTest extends TestCase
     private MockLocalizationProvider $localizationProvider;
     private MockListToolbarBuilder $listToolbarBuilder;
     private MockFormToolbarBuilder $formToolbarBuilder;
+    private ActivityViewBuilderFactory $activityViewBuilderFactory;
+    private ReferenceViewBuilderFactory $referenceViewBuilderFactory;
 
     protected function setUp(): void
     {
@@ -32,6 +36,8 @@ class ConfiguredSnippetAdminTest extends TestCase
         $this->localizationProvider = new MockLocalizationProvider();
         $this->listToolbarBuilder = new MockListToolbarBuilder();
         $this->formToolbarBuilder = new MockFormToolbarBuilder();
+        $this->activityViewBuilderFactory = new ActivityViewBuilderFactory($this->viewBuilderFactory, $this->securityChecker);
+        $this->referenceViewBuilderFactory = new ReferenceViewBuilderFactory($this->viewBuilderFactory, $this->securityChecker);
     }
 
     public function testConfigureNavigationItemsWithoutPermission(): void
@@ -99,12 +105,16 @@ class ConfiguredSnippetAdminTest extends TestCase
         $admin->configureViews($viewCollection);
 
         $views = $viewCollection->all();
-        self::assertCount(5, $views);
+
+        self::assertCount(9, $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.taxonomies', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.activity', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.reference', $views);
 
         $editView = $views['sulu_snippet_manager_testsnippet.edit'];
         AssertView::assertResourceView([
@@ -162,6 +172,32 @@ class ConfiguredSnippetAdminTest extends TestCase
         ], $addFormView->getView());
     }
 
+    public function testConfigureViewCollectionHasNoInsights(): void
+    {
+        $this->securityChecker->hasPermission = [
+            PermissionTypes::VIEW => true,
+            PermissionTypes::EDIT => true,
+            PermissionTypes::ADD => true,
+            PermissionTypes::TAXONOMIES => true,
+            PermissionTypes::LIVE => true,
+        ];
+        $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
+        $navigationItemCollection = new NavigationItemCollection();
+        $navigationItemCollection->add(new NavigationItem('parentNavigation'));
+        $viewCollection = new ViewCollection();
+        $admin->configureViews($viewCollection);
+
+        $views = $viewCollection->all();
+
+        self::assertCount(6, $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.taxonomies', $views);
+    }
+
     public function testConfigureViewCollectionWithoutPermission(): void
     {
         $this->securityChecker->hasPermission = [];
@@ -185,6 +221,8 @@ class ConfiguredSnippetAdminTest extends TestCase
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
+                        PermissionTypes::TAXONOMIES,
+                        PermissionTypes::INSIGHTS,
                     ],
                 ],
             ],
@@ -210,6 +248,8 @@ class ConfiguredSnippetAdminTest extends TestCase
             $this->localizationProvider,
             $this->formToolbarBuilder,
             $this->listToolbarBuilder,
+            $this->activityViewBuilderFactory,
+            $this->referenceViewBuilderFactory,
             $snippetType,
             $navigationTitle,
             $position,
