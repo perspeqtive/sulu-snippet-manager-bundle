@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="Tests/Application/bootstrap.php">
+<phpunit
+        colors="true"
+        bootstrap="Tests/Application/bootstrap.php"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnPhpunitDeprecations="true"
+>
+    <php>
+        <env name="KERNEL_CLASS" value="PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Application\Kernel"/>
+    </php>
     <testsuites>
         <testsuite name="Sulu Snippet Manager Bundle">
             <directory>Tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory>.</directory>
-            <exclude>
-                <directory>vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+    <source>
+        <include>
+            <directory suffix=".php">*</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">Tests</directory>
+        </exclude>
+    </source>
 
-    <php>
-        <env name="KERNEL_CLASS" value="PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Application\Kernel"/>
-    </php>
 </phpunit>
