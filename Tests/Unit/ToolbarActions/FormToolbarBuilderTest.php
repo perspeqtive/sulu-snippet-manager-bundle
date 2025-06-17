@@ -40,7 +40,11 @@ class FormToolbarBuilderTest extends TestCase
 
     public function testBuildWithOnlyEditPermission(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::EDIT => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::EDIT => true,
+            ],
+        ];
         $toolbarBuilder = new FormToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context', 'some-view');
         self::assertEquals([
@@ -51,7 +55,11 @@ class FormToolbarBuilderTest extends TestCase
 
     public function testBuildWithOnlyDeletePermissionNotOnEditView(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::DELETE => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::DELETE => true,
+            ],
+        ];
         $toolbarBuilder = new FormToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context', 'some-view');
         self::assertEquals([], $toolbars);
@@ -59,7 +67,11 @@ class FormToolbarBuilderTest extends TestCase
 
     public function testBuildWithOnlyDeletePermissionOnEditView(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::DELETE => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::DELETE => true,
+            ],
+        ];
         $toolbarBuilder = new FormToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context', 'some-view.edit');
         self::assertEquals([new ToolbarAction('sulu_admin.delete')], $toolbars);

@@ -174,12 +174,12 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollectionHasNoInsights(): void
     {
-        $this->securityChecker->hasPermission = [
+        $this->securityChecker->hasPermission = ['sulu_snippet_manager_snippets_testsnippet_security_context' => [
             PermissionTypes::VIEW => true,
             PermissionTypes::EDIT => true,
             PermissionTypes::ADD => true,
-            PermissionTypes::TAXONOMIES => true,
-            PermissionTypes::LIVE => true,
+        ],
+            'sulu_snippet_manager_taxonomies_testsnippet_security_context' => [PermissionTypes::EDIT => true],
         ];
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
@@ -196,6 +196,36 @@ class ConfiguredSnippetAdminTest extends TestCase
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.taxonomies', $views);
+    }
+
+    public function testConfigureViewCollectionHasNoTaxonomies(): void
+    {
+        $this->securityChecker->hasPermission = ['sulu_snippet_manager_snippets_testsnippet_security_context' => [
+            PermissionTypes::VIEW => true,
+            PermissionTypes::EDIT => true,
+            PermissionTypes::ADD => true,
+        ],
+            'sulu_snippet_manager_insights_testsnippet_security_context' => [PermissionTypes::EDIT => true],
+            'sulu.references.references' => ['*' => true],
+            'sulu.activities.activities' => ['*' => true],
+        ];
+        $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
+        $navigationItemCollection = new NavigationItemCollection();
+        $navigationItemCollection->add(new NavigationItem('parentNavigation'));
+        $viewCollection = new ViewCollection();
+        $admin->configureViews($viewCollection);
+
+        $views = $viewCollection->all();
+
+        self::assertCount(8, $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.activity', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.reference', $views);
     }
 
     public function testConfigureViewCollectionWithoutPermission(): void
@@ -216,13 +246,17 @@ class ConfiguredSnippetAdminTest extends TestCase
         $expected = [
             'Sulu' => [
                 'Snippet Manager' => [
-                    'sulu_snippet_manager_testsnippet_security_context' => [
+                    'sulu_snippet_manager_snippets_testsnippet_security_context' => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
-                        PermissionTypes::TAXONOMIES,
-                        PermissionTypes::INSIGHTS,
+                    ],
+                    'sulu_snippet_manager_taxonomies_testsnippet_security_context' => [
+                        PermissionTypes::EDIT,
+                    ],
+                    'sulu_snippet_manager_insights_testsnippet_security_context' => [
+                        PermissionTypes::EDIT,
                     ],
                 ],
             ],

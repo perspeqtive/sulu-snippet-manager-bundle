@@ -16,7 +16,7 @@ use function sprintf;
 
 class RegisterManagersCompilerPassTest extends KernelTestCase
 {
-    private static function assertHasView(string $name, ViewRegistry $viewRegistry)
+    private static function assertHasView(string $name, ViewRegistry $viewRegistry): void
     {
         try {
             $view = $viewRegistry->findViewByName($name);

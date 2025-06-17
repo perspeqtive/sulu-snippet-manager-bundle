@@ -32,7 +32,11 @@ class ListToolbarBuilderTest extends TestCase
 
     public function testBuildHasAddOnlyPermission(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::ADD => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::ADD => true,
+            ],
+        ];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
         self::assertEquals([
@@ -42,7 +46,11 @@ class ListToolbarBuilderTest extends TestCase
 
     public function testBuildHasDeleteOnlyPermission(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::DELETE => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::DELETE => true,
+            ],
+        ];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
         self::assertEquals([
@@ -52,7 +60,11 @@ class ListToolbarBuilderTest extends TestCase
 
     public function testBuildHasViewOnlyPermission(): void
     {
-        $this->securityChecker->hasPermission = [PermissionTypes::VIEW => true];
+        $this->securityChecker->hasPermission = [
+            'security-context' => [
+                PermissionTypes::VIEW => true,
+            ],
+        ];
         $toolbarBuilder = new ListToolbarBuilder($this->securityChecker);
         $toolbars = $toolbarBuilder->build('security-context');
         self::assertEquals([

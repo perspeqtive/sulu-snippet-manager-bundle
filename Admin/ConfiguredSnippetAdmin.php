@@ -164,7 +164,7 @@ class ConfiguredSnippetAdmin extends Admin
     {
         if (
             $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false
-            || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::TAXONOMIES) === false
+            || $this->securityChecker->hasPermission($this->buildSecurityContext(PermissionTypes::CONTEXT_TAXONOMIES), PermissionTypes::EDIT) === false
         ) {
             return;
         }
@@ -190,7 +190,7 @@ class ConfiguredSnippetAdmin extends Admin
         if (
             $this->hasInsightsSubViewPermissions() === false
             || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::EDIT) === false
-            || $this->securityChecker->hasPermission($this->buildSecurityContext(), PermissionTypes::INSIGHTS) === false
+            || $this->securityChecker->hasPermission($this->buildSecurityContext(PermissionTypes::CONTEXT_INSIGHTS), PermissionTypes::EDIT) === false
         ) {
             return;
         }
@@ -235,9 +235,9 @@ class ConfiguredSnippetAdmin extends Admin
         return ucwords(implode(' ', explode('-', $this->snippetType))) . ' Administration';
     }
 
-    private function buildSecurityContext(): string
+    private function buildSecurityContext(string $context = PermissionTypes::CONTEXT_SNIPPETS): string
     {
-        return 'sulu_snippet_manager_' . $this->snippetType . '_security_context';
+        return 'sulu_snippet_manager_' . $context . '_' . $this->snippetType . '_security_context';
     }
 
     private function buildViewName(string $type): string
@@ -256,13 +256,17 @@ class ConfiguredSnippetAdmin extends Admin
         return [
             'Sulu' => [
                 'Snippet Manager' => [
-                    $this->buildSecurityContext() => [
+                    $this->buildSecurityContext(PermissionTypes::CONTEXT_SNIPPETS) => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
-                        PermissionTypes::TAXONOMIES,
-                        PermissionTypes::INSIGHTS,
+                    ],
+                    $this->buildSecurityContext(PermissionTypes::CONTEXT_TAXONOMIES) => [
+                        PermissionTypes::EDIT,
+                    ],
+                    $this->buildSecurityContext(PermissionTypes::CONTEXT_INSIGHTS) => [
+                        PermissionTypes::EDIT,
                     ],
                 ],
             ],

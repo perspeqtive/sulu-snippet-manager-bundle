@@ -22,7 +22,8 @@ class MockSecurityChecker implements SecurityCheckerInterface
     {
         $this->subjectName = $subject;
 
-        return (isset($this->hasPermission[$permission]) && $this->hasPermission[$permission] === true)
+        return (isset($this->hasPermission[$subject][$permission]) && $this->hasPermission[$subject][$permission] === true)
+            || (isset($this->hasPermission[$subject]['*']) && $this->hasPermission[$subject]['*'] === true)
             || (isset($this->hasPermission['*']) && $this->hasPermission['*'] === true);
     }
 }
