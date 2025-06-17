@@ -59,20 +59,14 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
     private function addConfigToContainer(array $managerConfig, ContainerBuilder $container, ?string $parentName = null): void
     {
         if (isset($managerConfig['children']) && count($managerConfig['children']) > 0) {
-            $container->setDefinition(
-                'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-                $this->configuredParentDefinitionBuilder->generate($managerConfig, $container),
-            );
+            $this->addDefinitionForDistributorNavigationItem($container, $managerConfig);
             foreach ($managerConfig['children'] as $childConfig) {
                 $this->addConfigToContainer($childConfig, $container, $managerConfig['navigation_title']);
             }
 
             return;
         }
-        $container->setDefinition(
-            'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
-            $this->configuredSnippetAdminDefinitionBuilder->build($managerConfig, $container, $parentName),
-        );
+        $this->addDefinitionForDetailViews($container, $managerConfig, $parentName);
     }
 
     /**
@@ -95,5 +89,49 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
     {
         // @phpstan-ignore-next-line
         return $container->getParameter('sulu_snippet_manager.navigation');
+    }
+
+    /**
+     * @param array{
+     *       navigation_title: string,
+     *       type: string,
+     *       order: int,
+     *       icon: string,
+     *       children?: array<array-key, array{
+     *           navigation_title: string,
+     *           type: string,
+     *           order: int,
+     *           icon: string
+     *       }>
+     * } $managerConfig
+     */
+    private function addDefinitionForDistributorNavigationItem(ContainerBuilder $container, array $managerConfig): void
+    {
+        $container->setDefinition(
+            'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
+            $this->configuredParentDefinitionBuilder->generate($managerConfig, $container),
+        );
+    }
+
+    /**
+     * @param array{
+     *           navigation_title: string,
+     *           type: string,
+     *           order: int,
+     *           icon: string,
+     *           children?: array<array-key, array{
+     *               navigation_title: string,
+     *               type: string,
+     *               order: int,
+     *               icon: string
+     *           }>
+     * } $managerConfig
+     */
+    private function addDefinitionForDetailViews(ContainerBuilder $container, array $managerConfig, ?string $parentName): void
+    {
+        $container->setDefinition(
+            'perspeqtive_sulu_snippet_manager.' . $managerConfig['type'],
+            $this->configuredSnippetAdminDefinitionBuilder->build($managerConfig, $container, $parentName),
+        );
     }
 }

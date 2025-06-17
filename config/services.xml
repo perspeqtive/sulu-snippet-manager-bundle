@@ -9,7 +9,6 @@
         </service>
 
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin" id="perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin" abstract="true">
-            <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
             <tag name="sulu.context" context="admin" />
         </service>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin" id="perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin" abstract="true">
