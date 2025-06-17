@@ -2,10 +2,10 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\FormToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.form_toolbar_builder">
-            <argument id="sulu_security.security_checker" type="service"/>
+            <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
         </service>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\ListToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder">
-            <argument id="sulu_security.security_checker" type="service"/>
+            <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
         </service>
 
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin" id="perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin" abstract="true">
@@ -21,7 +21,14 @@
             <argument key="$referenceViewBuilderFactory" id="sulu_reference.reference_list_view_builder_factory" type="service"/>
             <tag name="sulu.context"  context="admin"/>
         </service>
-
+        <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Access\AccessControlManager" id="perspeqtive_sulu_snippet_manager.access.access_control_manager"
+                 decorates="sulu_security.access_control_manager">
+            <argument key="$accessControlManager" type="service" id=".inner"/>
+            <argument key="$requestStack" type="service" id="request_stack"/>
+            <call method="setSnippetRepository">
+                <argument type="service" id="sulu_snippet.repository"/>
+            </call>
+        </service>
 
     </services>
 </container>
