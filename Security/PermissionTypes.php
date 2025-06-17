@@ -22,7 +22,7 @@ final readonly class PermissionTypes
 
     public const SECURITY = BasePermissionTypes::SECURITY;
 
-    public const CONTEXT_SNIPPETS = 'snippets';
+    public const CONTEXT_SNIPPETS = '';
 
     public const CONTEXT_TAXONOMIES = 'taxonomies';
 

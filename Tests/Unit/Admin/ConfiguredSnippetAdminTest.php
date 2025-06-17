@@ -174,12 +174,12 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollectionHasNoInsights(): void
     {
-        $this->securityChecker->hasPermission = ['sulu_snippet_manager_snippets_testsnippet_security_context' => [
+        $this->securityChecker->hasPermission = ['snippet_manager.testsnippet' => [
             PermissionTypes::VIEW => true,
             PermissionTypes::EDIT => true,
             PermissionTypes::ADD => true,
         ],
-            'sulu_snippet_manager_taxonomies_testsnippet_security_context' => [PermissionTypes::EDIT => true],
+            'snippet_manager.testsnippet_taxonomies' => [PermissionTypes::EDIT => true],
         ];
         $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
         $navigationItemCollection = new NavigationItemCollection();
@@ -200,12 +200,12 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollectionHasNoTaxonomies(): void
     {
-        $this->securityChecker->hasPermission = ['sulu_snippet_manager_snippets_testsnippet_security_context' => [
+        $this->securityChecker->hasPermission = ['snippet_manager.testsnippet' => [
             PermissionTypes::VIEW => true,
             PermissionTypes::EDIT => true,
             PermissionTypes::ADD => true,
         ],
-            'sulu_snippet_manager_insights_testsnippet_security_context' => [PermissionTypes::EDIT => true],
+            'snippet_manager.testsnippet_insights' => [PermissionTypes::EDIT => true],
             'sulu.references.references' => ['*' => true],
             'sulu.activities.activities' => ['*' => true],
         ];
@@ -246,16 +246,16 @@ class ConfiguredSnippetAdminTest extends TestCase
         $expected = [
             'Sulu' => [
                 'Snippet Manager' => [
-                    'sulu_snippet_manager_snippets_testsnippet_security_context' => [
+                    'snippet_manager.testsnippet' => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
                     ],
-                    'sulu_snippet_manager_taxonomies_testsnippet_security_context' => [
+                    'snippet_manager.testsnippet_taxonomies' => [
                         PermissionTypes::EDIT,
                     ],
-                    'sulu_snippet_manager_insights_testsnippet_security_context' => [
+                    'snippet_manager.testsnippet_insights' => [
                         PermissionTypes::EDIT,
                     ],
                 ],

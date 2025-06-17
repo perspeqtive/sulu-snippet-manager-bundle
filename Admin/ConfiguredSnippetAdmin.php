@@ -237,7 +237,7 @@ class ConfiguredSnippetAdmin extends Admin
 
     private function buildSecurityContext(string $context = PermissionTypes::CONTEXT_SNIPPETS): string
     {
-        return 'sulu_snippet_manager_' . $context . '_' . $this->snippetType . '_security_context';
+        return 'snippet_manager.' . $this->snippetType . ($context !== PermissionTypes::CONTEXT_SNIPPETS ? '_' . $context : '');
     }
 
     private function buildViewName(string $type): string
