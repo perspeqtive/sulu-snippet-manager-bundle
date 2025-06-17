@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Access;
 
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -19,7 +20,7 @@ use function str_contains;
 
 class AccessControlManager implements AccessControlManagerInterface
 {
-    private ?SnippetRepository $snippetRepository = null;
+    private ?DocumentManagerInterface $documentManager = null;
 
     public function __construct(
         private readonly AccessControlManagerInterface $accessControlManager,
@@ -81,7 +82,7 @@ class AccessControlManager implements AccessControlManagerInterface
     {
         if (
             in_array($request->attributes->get('_route'), ['sulu_snippet.get_snippet', 'sulu_snippet.put_snippet'], true) === false
-            || $this->snippetRepository instanceof SnippetRepository === false) {
+            || $this->documentManager instanceof SnippetRepository === false) {
             return '';
         }
 
@@ -94,7 +95,7 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         $id = $request->attributes->get('id', 'none');
-        $snippets = $this->snippetRepository->getSnippetsByUuids([$id], $locale);
+        $snippets = $this->documentManager->find($id, $locale);
         if (count($snippets) !== 1) {
             return '';
         }
@@ -145,8 +146,8 @@ class AccessControlManager implements AccessControlManagerInterface
         return $this->accessControlManager->getPermissions($type, $identifier);
     }
 
-    public function setSnippetRepository(SnippetRepository $snippetRepository): void
+    public function setDocumentManager(DocumentManagerInterface $documentManager): void
     {
-        $this->snippetRepository = $snippetRepository;
+        $this->documentManager = $documentManager;
     }
 }

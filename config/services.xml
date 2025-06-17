@@ -25,8 +25,8 @@
                  decorates="sulu_security.access_control_manager">
             <argument key="$accessControlManager" type="service" id=".inner"/>
             <argument key="$requestStack" type="service" id="request_stack"/>
-            <call method="setSnippetRepository">
-                <argument type="service" id="sulu_snippet.repository"/>
+            <call method="setDocumentManager">
+                <argument type="service" id="sulu_document_manager.document_manager"/>
             </call>
         </service>
 
