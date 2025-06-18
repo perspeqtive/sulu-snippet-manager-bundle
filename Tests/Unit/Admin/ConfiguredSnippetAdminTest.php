@@ -168,6 +168,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             'formKey' => 'snippets',
             'editView' => 'sulu_snippet_manager_testsnippet.edit',
             'toolbarActions' => ['save', 'delete'],
+            'metadataRequestParameters' => ['overwriteDefaultType' => 'testsnippet'],
             'parent' => 'sulu_snippet_manager_testsnippet.add',
         ], $addFormView->getView());
     }

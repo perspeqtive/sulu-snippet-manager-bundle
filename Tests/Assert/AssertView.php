@@ -38,12 +38,13 @@ class AssertView extends Assert
 
     public static function assertFormView(array $expected, View $view): void
     {
-        self::assertSame($expected['name'], $view->getName(), 'name does not match');
-        self::assertSame($expected['path'], $view->getPath(), 'path does not match');
+        self::assertSame($expected['name'] ?? null, $view->getName(), 'name does not match');
+        self::assertSame($expected['path'] ?? null, $view->getPath(), 'path does not match');
         self::assertSame($expected['backView'] ?? null, $view->getOption('backView'), 'backView does not match');
         self::assertSame($expected['parent'] ?? null, $view->getParent(), 'parent does not match');
-        self::assertSame($expected['resourceKey'], $view->getOption('resourceKey'), 'resourceKey does not match');
-        self::assertSame($expected['editView'], $view->getOption('editView'), 'editView does not match');
-        self::assertSame($expected['toolbarActions'], $view->getOption('toolbarActions'), 'toolbarActions do not match');
+        self::assertSame($expected['resourceKey'] ?? null, $view->getOption('resourceKey'), 'resourceKey does not match');
+        self::assertSame($expected['editView'] ?? null, $view->getOption('editView'), 'editView does not match');
+        self::assertSame($expected['toolbarActions'] ?? null, $view->getOption('toolbarActions'), 'toolbarActions do not match');
+        self::assertSame($expected['metadataRequestParameters'] ?? null, $view->getOption('metadataRequestParameters'), 'metaDataRequestParameters do not match');
     }
 }

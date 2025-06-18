@@ -115,6 +115,7 @@ class ConfiguredSnippetAdmin extends Admin
                         $this->buildViewName(ViewTypes::ADD),
                     ),
                 )
+                ->addMetadataRequestParameters(['overwriteDefaultType' => $this->snippetType])
                 ->setParent($this->buildViewName(ViewTypes::ADD)),
         );
 
