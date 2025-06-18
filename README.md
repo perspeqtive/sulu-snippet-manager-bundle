@@ -79,3 +79,7 @@ Each snippet automatically receives its own permission key. These permissions ar
 You can assign user roles to control access (view, add, edit, delete) to each snippet separately.
 
 Users without the required permission won’t see the corresponding navigation item in the Sulu Admin UI.
+
+# Contribution
+
+Please feel free to fork and extend existing or add new features and send a pull request with your changes! To establish a consistent code quality, please provide unit tests for all your changes and adapt the documentation.
