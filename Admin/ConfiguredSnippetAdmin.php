@@ -50,7 +50,6 @@ class ConfiguredSnippetAdmin extends Admin
         }
 
         $navigationItem = new NavigationItem($this->navigationTitle);
-        $navigationItem->setLabel($this->navigationTitle);
         $navigationItem->setView($this->buildViewName(ViewTypes::LIST));
         $navigationItem->setIcon($this->icon);
         $navigationItem->setPosition($this->position);

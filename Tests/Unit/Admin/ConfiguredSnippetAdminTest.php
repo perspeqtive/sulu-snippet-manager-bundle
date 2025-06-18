@@ -70,7 +70,6 @@ class ConfiguredSnippetAdminTest extends TestCase
         self::assertArrayHasKey('My Title', $items);
         $item = $items['My Title'];
         self::assertSame('My Title', $item->getName());
-        self::assertSame('My Title', $item->getLabel());
         self::assertSame(20, $item->getPosition());
         self::assertSame('su-snippet', $item->getIcon());
         self::assertSame('sulu_snippet_manager_testsnippet.list', $item->getView());
@@ -90,7 +89,6 @@ class ConfiguredSnippetAdminTest extends TestCase
         self::assertCount(1, $items);
         $item = $items[0];
         self::assertSame('My Title', $item->getName());
-        self::assertSame('My Title', $item->getLabel());
         self::assertSame(20, $item->getPosition());
         self::assertSame('su-snippet', $item->getIcon());
         self::assertSame('sulu_snippet_manager_testsnippet.list', $item->getView());

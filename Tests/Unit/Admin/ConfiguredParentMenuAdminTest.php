@@ -23,7 +23,6 @@ class ConfiguredParentMenuAdminTest extends TestCase
         $item = $items['My Title'];
         self::assertSame(10, $item->getPosition());
         self::assertSame('su-icon', $item->getIcon());
-        self::assertSame('My Title', $item->getLabel());
     }
 
     public function testGetSecurityContextsIsDefault(): void

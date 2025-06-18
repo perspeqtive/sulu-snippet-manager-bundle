@@ -20,7 +20,6 @@ class ConfiguredParentMenuAdmin extends Admin
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
         $configurationItem = new NavigationItem($this->navigationTitle);
-        $configurationItem->setLabel($this->navigationTitle);
         $configurationItem->setPosition($this->position);
         $configurationItem->setIcon($this->icon);
         $navigationItemCollection->add($configurationItem);
