@@ -129,7 +129,6 @@ class ConfiguredSnippetAdminTest extends TestCase
         AssertView::assertResourceView([
             'name' => 'sulu_snippet_manager_testsnippet.add',
             'path' => '/testsnippet-snippets/:locale/add',
-            'routerAttributesToBackView' => ['locale'],
             'backView' => 'sulu_snippet_manager_testsnippet.list',
             'locales' => ['de', 'en'],
         ], $addView->getView());

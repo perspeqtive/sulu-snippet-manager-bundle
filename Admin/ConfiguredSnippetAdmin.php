@@ -144,20 +144,19 @@ class ConfiguredSnippetAdmin extends Admin
         $locales = $this->localizationProvider->getAllLocales();
         $viewCollection->add(
             $this->viewBuilderFactory
+                ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::ADD), '/' . $this->snippetType . '-snippets/:locale/add')
+                ->setResourceKey(SnippetDocument::RESOURCE_KEY)
+                ->addLocales($locales)
+                ->setBackView($this->buildViewName(ViewTypes::LIST))
+        );
+        $viewCollection->add(
+            $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::EDIT), '/' . $this->snippetType . '-snippets/:locale/:id')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
                 ->setBackView($this->buildViewName(ViewTypes::LIST))
                 ->addLocales($locales)
                 ->setTitleProperty('title'),
-        );
-        $viewCollection->add(
-            $this->viewBuilderFactory
-                ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::ADD), '/' . $this->snippetType . '-snippets/:locale/add')
-                ->setResourceKey(SnippetDocument::RESOURCE_KEY)
-                ->addRouterAttributesToBackView(['locale'])
-                ->setBackView($this->buildViewName(ViewTypes::LIST))
-                ->addLocales($locales),
         );
     }
 
