@@ -18,7 +18,7 @@ The SuluSnippetManagerBundle adds configurable snippet-based navigation items to
 # Installation
 ## Install the bundle via composer:
 
-```
+```bash
 composer require perspeqtive/sulu-snippet-manager-bundle
 ```
 
@@ -26,7 +26,7 @@ composer require perspeqtive/sulu-snippet-manager-bundle
 
 Register it in your config/bundles.php:
 
-```
+```php
 return [
 // ...
     PERSPEQTIVE\SuluSnippetManagerBundle\SuluSnippetManagerBundle::class => ['all' => true],
@@ -37,7 +37,7 @@ return [
 Create a configuration file at `config/packages/sulu_snippet_manager.yaml`. Here you define how and where your snippet navigation items appear in the Sulu Admin UI.
 
 Example configuration:
-```
+```yaml
 sulu_snippet_manager:
     navigation:
         configuration:
