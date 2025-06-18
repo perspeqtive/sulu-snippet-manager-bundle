@@ -44,7 +44,6 @@ sulu_snippet_manager:
             navigation_title: "Configuration" 
             order: 39
             icon: "su-news"
-            type: configuration
             children:
                 settings:
                     navigation_title: "Settings"
@@ -70,7 +69,7 @@ sulu_snippet_manager:
 | navigation_title |            yes            | Label shown in the Sulu Admin navigation                                                                                                        |
 | order            |            yes            | Sort order position                                                                                                                             |
 | icon             |            no             | Sulu icon name (e.g. su-settings, see [icon overview](https://jsdocs.sulu.io/2.5/#!/Icon))                                                      |
-| type             |            yes            | The snippet type, when it is not a nested parent config item. When it is a parent item, it should be a unique identifier                        |
+| type             |            yes            | The snippet type, when it is not a nested parent item. When it is a parent item, it is not required                                      |
 | children         |            no             | Nested navigation items — parent items with children act as groups without detail views, parents without children behave like normal list views |
 
 
