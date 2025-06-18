@@ -145,4 +145,14 @@ class AccessControlManagerTest extends TestCase
 
         self::assertSame(['view' => true, 'edit' => true], $result);
     }
+
+    public function testGetUserPermissionsUsesTemplateFromRequestSnippetPermissions(): void
+    {
+        $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
+        $this->request->initialize(request: ['template' => 'shop']);
+        $condition = new SecurityCondition('sulu.global.snippets');
+        $result = $this->manager->getUserPermissions($condition, null);
+
+        self::assertSame(['view' => true, 'edit' => true], $result);
+    }
 }
