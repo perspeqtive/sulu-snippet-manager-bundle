@@ -1,6 +1,15 @@
 # SuluSnippetManagerBundle
 The SuluSnippetManagerBundle adds configurable snippet-based navigation items to the Sulu Admin interface. This allows you to organize snippets by type and permissions within the native Sulu Admin UI.
 
+<p style="display: flex; gap: 32px; justify-content: center;">
+    <a href="docs/navigation-items.png" target="_blank">
+        <img src="docs/navigation-items.png" style="border-radius: 3px;" alt="Navigation items">
+    </a>
+    <a href="docs/rights-management.png" target="_blank">
+        <img src="docs/rights-management.png" style="border-radius: 3px;" alt="Rights management">
+    </a>
+</p>
+
 ## Features
 - Custom navigation items for different snippet types
 - Optional nested navigation items (e.g. under a main “Configuration” item)
