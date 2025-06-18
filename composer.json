@@ -2,11 +2,14 @@
   "name": "perspeqtive/sulu-snippet-manager-bundle",
   "description": "Transform snippets in custom mangers",
   "license": "MIT",
-  "version": "0.1.0",
   "authors": [
     {
       "name": "Markus Holstein",
       "email": "mh@perspeqtive.de"
+    },
+    {
+      "name": "Alexander Bürner",
+      "email": "ab@perspeqtive.de"
     }
   ],
   "require": {

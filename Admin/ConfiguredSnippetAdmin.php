@@ -147,7 +147,7 @@ class ConfiguredSnippetAdmin extends Admin
                 ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::ADD), '/' . $this->snippetType . '-snippets/:locale/add')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                 ->addLocales($locales)
-                ->setBackView($this->buildViewName(ViewTypes::LIST))
+                ->setBackView($this->buildViewName(ViewTypes::LIST)),
         );
         $viewCollection->add(
             $this->viewBuilderFactory

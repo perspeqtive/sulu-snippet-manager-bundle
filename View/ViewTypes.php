@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\View;
 
-class ViewTypes
+final readonly class ViewTypes
 {
     public const EDIT = 'edit';
     public const ADD = 'add';

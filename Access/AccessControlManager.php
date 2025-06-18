@@ -81,8 +81,8 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         /** @var ?string $route */
         $route = $request->attributes->get('_route');
         if (
-            $route !== null
-            && str_starts_with($route, 'sulu_snippet.') === false
+            $route === null
+            || str_starts_with($route, 'sulu_snippet.') === false
         ) {
             return '';
         }
@@ -136,9 +136,12 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         return $this->accessControlManager->getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user, $system);
     }
 
-    public function setPermissions($type, $identifier, $permissions, bool $inherit = false): void
+    /**
+     * @phpstan-ignore missingType.return
+     */
+    public function setPermissions($type, $identifier, $permissions, bool $inherit = false)
     {
-        $this->accessControlManager->setPermissions($type, $identifier, $permissions, $inherit);
+        return $this->accessControlManager->setPermissions($type, $identifier, $permissions, $inherit);
     }
 
     public function getPermissions($type, $identifier): array
