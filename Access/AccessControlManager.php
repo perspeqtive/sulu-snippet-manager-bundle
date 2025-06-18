@@ -73,6 +73,12 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return $type;
         }
 
+        /** @var ?string $type */
+        $type = $request->request->get('template');
+        if (is_string($type) === true && str_contains($type, ',') === false) {
+            return $type;
+        }
+
         return $this->reconstructSnippetTypeFromRequest($request);
     }
 
