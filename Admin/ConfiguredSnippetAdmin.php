@@ -33,6 +33,7 @@ class ConfiguredSnippetAdmin extends Admin
         private readonly ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory,
         private readonly string $snippetType,
         private readonly string $navigationTitle,
+        private readonly string $listViewKey,
         private readonly int $position = 40,
         private readonly string $icon = 'su-snippet',
         private readonly ?string $parentNavigation = null,
@@ -82,7 +83,7 @@ class ConfiguredSnippetAdmin extends Admin
             $this->viewBuilderFactory
                 ->createListViewBuilder($this->buildViewName(ViewTypes::LIST), '/' . $this->snippetType . '-snippets/:locale')
                 ->setResourceKey(SnippetDocument::RESOURCE_KEY)
-                ->setListKey('snippets')
+                ->setListKey($this->listViewKey)
                 ->setTitle($this->buildName())
                 ->addListAdapters(['table'])
                 ->addRouterAttributesToListRequest(['locale'])

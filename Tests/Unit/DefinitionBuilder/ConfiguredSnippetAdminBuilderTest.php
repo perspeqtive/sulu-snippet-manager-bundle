@@ -21,7 +21,7 @@ class ConfiguredSnippetAdminBuilderTest extends TestCase
             'perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin' => $baseDefinition,
         ]);
         $definitionBuilder = new ConfiguredSnippetAdminBuilder();
-        $definition = $definitionBuilder->build(['navigation_title' => 'Test', 'type' => 'shop', 'order' => 10, 'icon' => 'su-icon'], $containerBuilder, 'testparent');
+        $definition = $definitionBuilder->build(['navigation_title' => 'Test', 'type' => 'shop', 'order' => 10, 'icon' => 'su-icon', 'list_view_key' => 'snippets'], $containerBuilder, 'testparent');
 
         self::assertTrue($baseDefinition->isAbstract());
         self::assertFalse($definition->isAbstract());
@@ -32,6 +32,7 @@ class ConfiguredSnippetAdminBuilderTest extends TestCase
                 '$someClass' => 'testargument',
                 '$snippetType' => 'shop',
                 '$navigationTitle' => 'Test',
+                '$listViewKey' => 'snippets',
                 '$position' => 10,
                 '$icon' => 'su-icon',
                 '$parentNavigation' => 'testparent',

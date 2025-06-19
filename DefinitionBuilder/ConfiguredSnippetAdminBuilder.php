@@ -15,7 +15,8 @@ class ConfiguredSnippetAdminBuilder
      *      navigation_title: string,
      *      type: string,
      *      order: int,
-     *      icon: string
+     *      icon: string,
+     *      list_view_key: string,
      * } $managerConfig
      */
     public function build(array $managerConfig, ContainerBuilder $container, ?string $parentNavigation): Definition
@@ -24,6 +25,7 @@ class ConfiguredSnippetAdminBuilder
         $definition->setAbstract(false);
         $definition->setArgument('$snippetType', $managerConfig['type']);
         $definition->setArgument('$navigationTitle', $managerConfig['navigation_title']);
+        $definition->setArgument('$listViewKey', $managerConfig['list_view_key']);
         $definition->setArgument('$position', $managerConfig['order']);
         $definition->setArgument('$icon', $managerConfig['icon']);
         $definition->setArgument('$parentNavigation', $parentNavigation);

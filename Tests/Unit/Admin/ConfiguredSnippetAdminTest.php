@@ -96,7 +96,7 @@ class ConfiguredSnippetAdminTest extends TestCase
 
     public function testConfigureViewCollection(): void
     {
-        $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation');
+        $admin = $this->buildAdmin('testsnippet', 'My Title', 20, 'su-snippet', 'parentNavigation', 'my_list_view');
         $navigationItemCollection = new NavigationItemCollection();
         $navigationItemCollection->add(new NavigationItem('parentNavigation'));
         $viewCollection = new ViewCollection();
@@ -136,7 +136,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             'name' => 'sulu_snippet_manager_testsnippet.list',
             'path' => '/testsnippet-snippets/:locale',
             'resourceKey' => 'snippets',
-            'listKey' => 'snippets',
+            'listKey' => 'my_list_view',
             'title' => 'Testsnippet Administration',
             'routerAttributesToListRequest' => ['locale'],
             'editView' => 'sulu_snippet_manager_testsnippet.edit',
@@ -273,6 +273,7 @@ class ConfiguredSnippetAdminTest extends TestCase
         int $position = 10,
         string $icon = 'su-icon',
         ?string $parentNavigation = null,
+        string $listViewKey = 'snippets',
     ): ConfiguredSnippetAdmin {
         return new ConfiguredSnippetAdmin(
             $this->viewBuilderFactory,
@@ -284,6 +285,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             $this->referenceViewBuilderFactory,
             $snippetType,
             $navigationTitle,
+            $listViewKey,
             $position,
             $icon,
             $parentNavigation,

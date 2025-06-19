@@ -48,11 +48,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *      type: string,
      *      order: int,
      *      icon: string,
+     *      list_view_key: string,
      *      children?: array<array-key, array{
      *          navigation_title: string,
      *          type: string,
      *          order: int,
-     *          icon: string
+     *          icon: string,
+     *          list_view_key: string,
      *      }>
      * } $managerConfig
      */
@@ -76,11 +78,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *       type: string,
      *       order: int,
      *       icon: string,
+     *       list_view_key: string,
      *       children?: array<array-key, array{
      *           navigation_title: string,
      *           type: string,
      *           order: int,
-     *           icon: string
+     *           icon: string,
+     *           list_view_key: string,
      *       }>
      *     }
      * }
@@ -97,11 +101,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *       type: string,
      *       order: int,
      *       icon: string,
+     *       list_view_key: string,
      *       children?: array<array-key, array{
      *           navigation_title: string,
      *           type: string,
      *           order: int,
-     *           icon: string
+     *           icon: string,
+     *           list_view_key: string,
      *       }>
      * } $managerConfig
      */
@@ -119,11 +125,13 @@ class RegisterManagersCompilerPass implements CompilerPassInterface
      *           type: string,
      *           order: int,
      *           icon: string,
+     *           list_view_key: string,
      *           children?: array<array-key, array{
      *               navigation_title: string,
      *               type: string,
      *               order: int,
-     *               icon: string
+     *               icon: string,
+     *               list_view_key: string,
      *           }>
      * } $managerConfig
      */
