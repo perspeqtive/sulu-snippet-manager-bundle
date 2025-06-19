@@ -14,6 +14,7 @@ The SuluSnippetManagerBundle adds configurable snippet-based navigation items to
 - Custom navigation items for different snippet types
 - Optional nested navigation items (e.g. under a main “Configuration” item)
 - Independent permission handling per snippet type and snippet navigation item
+- Easy custom snippet list view per snippet type
 
 # Installation
 ## Install the bundle via composer:
@@ -50,6 +51,7 @@ sulu_snippet_manager:
                     type: "settings"
                     order: 0
                     icon: "su-settings"
+                    snippet_list_view: "my-custom-view"
                 account:
                     navigation_title: "Account Settings"
                     type: "account"
@@ -64,14 +66,14 @@ sulu_snippet_manager:
 
 ## Configuration keys explained:
 
-| config item      |         required          | description                                                                                                                                     |
-|:-----------------|:-------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------|
-| navigation_title |            yes            | Label shown in the Sulu Admin navigation                                                                                                        |
-| order            |            yes            | Sort order position                                                                                                                             |
-| icon             |            no             | Sulu icon name (e.g. su-settings, see [icon overview](https://jsdocs.sulu.io/2.5/#!/Icon))                                                      |
-| type             |            yes            | The snippet type, when it is not a nested parent item. When it is a parent item, it is not required                                      |
-| children         |            no             | Nested navigation items — parent items with children act as groups without detail views, parents without children behave like normal list views |
-
+| config item       | required | description                                                                                                                                     |
+|:------------------|:--------:|:------------------------------------------------------------------------------------------------------------------------------------------------|
+| navigation_title  |   yes    | Label shown in the Sulu Admin navigation                                                                                                        |
+| order             |   yes    | Sort order position                                                                                                                             |
+| icon              |    no    | Sulu icon name (e.g. su-settings, see [icon overview](https://jsdocs.sulu.io/2.5/#!/Icon))                                                      |
+| type              |   yes    | The snippet type, when it is not a nested parent item. When it is a parent item, it is not required                                             |
+| children          |    no    | Nested navigation items — parent items with children act as groups without detail views, parents without children behave like normal list views |
+| snippet_list_view |    no    | The custom list view xml, where the view is configured                                                                                          |  
 
 ## Permissions
 Each snippet automatically receives its own permission key. These permissions are independent from the global snippet permissions in Sulu.
