@@ -28,7 +28,12 @@
   },
   "autoload": {
     "psr-4": {
-      "PERSPEQTIVE\\SuluSnippetManagerBundle\\": ""
+      "PERSPEQTIVE\\SuluSnippetManagerBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PERSPEQTIVE\\SuluSnippetManagerBundle\\Tests\\": "tests/"
     }
   },
   "config": {

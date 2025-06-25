@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
         colors="true"
-        bootstrap="Tests/Application/bootstrap.php"
+        bootstrap="tests/Application/bootstrap.php"
         displayDetailsOnTestsThatTriggerDeprecations="true"
         displayDetailsOnTestsThatTriggerErrors="true"
         displayDetailsOnTestsThatTriggerNotices="true"
@@ -13,7 +13,7 @@
     </php>
     <testsuites>
         <testsuite name="Sulu Snippet Manager Bundle">
-            <directory>Tests</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
     <source>
@@ -21,7 +21,7 @@
             <directory suffix=".php">.</directory>
         </include>
         <exclude>
-            <directory suffix=".php">Tests</directory>
+            <directory suffix=".php">tests</directory>
             <directory>vendor</directory>
         </exclude>
     </source>
