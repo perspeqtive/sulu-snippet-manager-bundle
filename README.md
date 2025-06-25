@@ -1,4 +1,6 @@
 # SuluSnippetManagerBundle
+![Packagist Version](https://img.shields.io/packagist/v/perspeqtive/sulu-snippet-manager-bundle)
+
 The SuluSnippetManagerBundle adds configurable snippet-based navigation items to the Sulu Admin interface. This allows you to organize snippets by type and permissions within the native Sulu Admin UI.
 
 <p style="display: flex; gap: 32px; justify-content: center;">
