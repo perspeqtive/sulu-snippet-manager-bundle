@@ -1,12 +1,11 @@
 <template xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
-          xmlns:xi="http://www.w3.org/2001/XInclude"
 >
 
-    <key>home</key>
+    <key>page</key>
 
-    <view>pages/home</view>
+    <view>pages/page</view>
     <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
     <cacheLifetime>604800</cacheLifetime>
 
