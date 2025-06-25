@@ -6,6 +6,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
+
 use function is_string;
 
 class SnippetDefaultTypeSetterVisitor implements TypedFormMetadataVisitorInterface

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Unit\ToolbarActions;
 
-use PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\ListToolbarBuilder;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockSecurityChecker;
+use PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\ListToolbarBuilder;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;

@@ -16,6 +16,7 @@ use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuil
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+
 use function explode;
 use function implode;
 use function ucwords;

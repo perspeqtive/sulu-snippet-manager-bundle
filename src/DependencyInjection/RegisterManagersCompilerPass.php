@@ -8,6 +8,7 @@ use PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder\ConfiguredParentDefin
 use PERSPEQTIVE\SuluSnippetManagerBundle\DefinitionBuilder\ConfiguredSnippetAdminBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+
 use function count;
 
 class RegisterManagersCompilerPass implements CompilerPassInterface

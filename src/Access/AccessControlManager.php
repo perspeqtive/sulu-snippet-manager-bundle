@@ -12,6 +12,7 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+
 use function is_string;
 use function str_contains;
 use function str_starts_with;

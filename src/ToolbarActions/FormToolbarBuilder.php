@@ -9,6 +9,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+
 use function str_ends_with;
 
 readonly class FormToolbarBuilder implements FormToolbarBuilderInterface

@@ -9,5 +9,5 @@ parameters:
     level: max
     excludePaths:
         - %currentWorkingDirectory%/vendor/*
-        - %currentWorkingDirectory%/Tests/*
-        - %currentWorkingDirectory%/DependencyInjection/Configuration.php
+        - %currentWorkingDirectory%/tests/*
+        - %currentWorkingDirectory%/src/DependencyInjection/Configuration.php
