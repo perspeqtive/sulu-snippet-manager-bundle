@@ -6,6 +6,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Unit\Access;
 
 use PERSPEQTIVE\SuluSnippetManagerBundle\Access\AccessControlManager;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockAccessControlManager;
+use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockDefaultSnippetManager;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockDocumentManager;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
@@ -20,6 +21,7 @@ class AccessControlManagerTest extends TestCase
     private AccessControlManager $manager;
     private MockDocumentManager $documentManager;
     private RequestStack $requestStack;
+    private MockDefaultSnippetManager $defaultSnippetManager;
 
     protected function setUp(): void
     {
@@ -29,11 +31,12 @@ class AccessControlManagerTest extends TestCase
 
         $this->oldManager = new MockAccessControlManager();
         $this->documentManager = new MockDocumentManager();
-
+        $this->defaultSnippetManager = new MockDefaultSnippetManager();
         $this->manager = new AccessControlManager(
             $this->oldManager,
             $this->requestStack,
             $this->documentManager,
+            $this->defaultSnippetManager,
         );
     }
 
@@ -154,5 +157,32 @@ class AccessControlManagerTest extends TestCase
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => true], $result);
+    }
+
+    public function testGetUserPermissionsUsesAreasFromRequestWithSingleArea(): void
+    {
+        $this->oldManager->result = ['sulu.global.snippets' => ['view' => false, 'edit' => false]];
+        $this->defaultSnippetManager->typeForArea['shop-area'] = 'shop';
+
+        $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
+        $this->request->initialize(query: ['areas' => 'shop-area']);
+        $condition = new SecurityCondition('sulu.global.snippets');
+        $result = $this->manager->getUserPermissions($condition, null);
+
+        self::assertSame(['view' => true, 'edit' => true], $result);
+    }
+
+    public function testGetUserPermissionsUsesAreasFromRequestWithMultipleAreasWithOneFalseKeepsFalse(): void
+    {
+        $this->defaultSnippetManager->typeForArea['shop-area'] = 'shop';
+        $this->defaultSnippetManager->typeForArea['services-area'] = 'services';
+
+        $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
+        $this->oldManager->result['snippet_manager.services'] = ['view' => false, 'edit' => false];
+        $this->request->initialize(query: ['areas' => 'shop-area,services-area']);
+        $condition = new SecurityCondition('sulu.global.snippets');
+        $result = $this->manager->getUserPermissions($condition, null);
+
+        self::assertSame(['view' => true, 'edit' => false], $result);
     }
 }

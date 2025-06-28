@@ -16,16 +16,6 @@ use function sprintf;
 
 class RegisterManagersCompilerPassTest extends KernelTestCase
 {
-    private static function assertHasView(string $name, ViewRegistry $viewRegistry): void
-    {
-        try {
-            $view = $viewRegistry->findViewByName($name);
-            self::assertInstanceOf(View::class, $view);
-        } catch (Exception) {
-            self::fail(sprintf('View "%s" does not exist.', $name));
-        }
-    }
-
     public function testNavigationItemsAreCreated(): void
     {
         /** @var NavigationRegistry $navigationRegistry */
@@ -98,6 +88,16 @@ class RegisterManagersCompilerPassTest extends KernelTestCase
             }
         }
         self::fail('Navigation Item "' . $name . '" not found');
+    }
+
+    private static function assertHasView(string $name, ViewRegistry $viewRegistry): void
+    {
+        try {
+            $view = $viewRegistry->findViewByName($name);
+            self::assertInstanceOf(View::class, $view);
+        } catch (Exception) {
+            self::fail(sprintf('View "%s" does not exist.', $name));
+        }
     }
 
     protected function tearDown(): void

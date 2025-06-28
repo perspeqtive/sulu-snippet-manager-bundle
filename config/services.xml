@@ -26,6 +26,7 @@
             <argument key="$accessControlManager" type="service" id=".inner"/>
             <argument key="$requestStack" type="service" id="request_stack"/>
             <argument key="$documentManager" type="service" id="sulu_document_manager.document_manager"/>
+            <argument key="$defaultSnippetManager" type="service" id="sulu_snippet.default_snippet.manager"/>
         </service>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData\SnippetDefaultTypeSetterVisitor" id="perspeqtive_sulu_snippet_manager.form_meta_data.snippet_default_type_setter_visitor">
             <tag name="sulu_admin.typed_form_metadata_visitor"/>

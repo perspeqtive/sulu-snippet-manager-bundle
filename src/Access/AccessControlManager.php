@@ -6,6 +6,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Access;
 
 use Exception;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -13,6 +14,8 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use function array_map;
+use function explode;
 use function is_string;
 use function str_contains;
 use function str_starts_with;
@@ -23,6 +26,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         private AccessControlManagerInterface $accessControlManager,
         private RequestStack $requestStack,
         private DocumentManagerInterface $documentManager,
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
     ) {
     }
 
@@ -34,15 +38,21 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return $parentPermissions;
         }
 
-        $type = $this->getRequestedType();
-        if ($type === '') {
+        $types = $this->getRequestedTypes();
+        if ($types === []) {
             return $parentPermissions;
         }
 
-        $subSecurityCondition = $this->buildSecurityCondition($type, $securityCondition);
-        /** @var array<string,bool> $subResult */
-        $subResult = $this->accessControlManager->getUserPermissions($subSecurityCondition, $user);
+        /** @var array<string, bool> $permissions */
+        $permissions = array_map(fn () => true, $parentPermissions);
+        foreach ($types as $type) {
+            $subSecurityCondition = $this->buildSecurityCondition($type, $securityCondition);
+            /** @var array<string, bool> $subResult */
+            $subResult = $this->accessControlManager->getUserPermissions($subSecurityCondition, $user);
+            $permissions = $this->mergeDetailPermissions($permissions, $subResult);
+        }
 
+        /** @var array<string,bool> $subResult */
         return $this->mergePermissions($parentPermissions, $subResult);
     }
 
@@ -60,29 +70,46 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         return true;
     }
 
-    private function getRequestedType(): string
+    /**
+     * @return string[]
+     */
+    private function getRequestedTypes(): array
     {
         $request = $this->requestStack->getCurrentRequest();
         if ($request instanceof Request === false) {
-            return '';
+            return [];
         }
 
         /** @var ?string $type */
         $type = $request->query->get('types');
         if (is_string($type) === true && str_contains($type, ',') === false) {
-            return $type;
+            return [$type];
         }
 
         /** @var ?string $type */
         $type = $request->request->get('template');
         if (is_string($type) === true && str_contains($type, ',') === false) {
-            return $type;
+            return [$type];
+        }
+
+        if ($request->query->has('areas')) {
+            /** @var string $areas */
+            $areas = $request->query->get('areas', '');
+            /** @var string[] $types */
+            $types = array_map(function ($area) {
+                return $this->defaultSnippetManager->getTypeForArea($area);
+            }, explode(',', $areas));
+
+            return $types;
         }
 
         return $this->reconstructSnippetTypeFromRequest($request);
     }
 
-    private function reconstructSnippetTypeFromRequest(Request $request): string
+    /**
+     * @return string[]
+     */
+    private function reconstructSnippetTypeFromRequest(Request $request): array
     {
         /** @var ?string $route */
         $route = $request->attributes->get('_route');
@@ -90,7 +117,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             $route === null
             || str_starts_with($route, 'sulu_snippet.') === false
         ) {
-            return '';
+            return [];
         }
 
         /** @var ?RequestAttributes $suluAttributes */
@@ -104,11 +131,11 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             /** @var SnippetDocument $snippet */
             $snippet = $this->documentManager->find($id, $locale);
 
-            return (string) $snippet->getStructureType();
+            return [(string) $snippet->getStructureType()];
         } catch (Exception) {
         }
 
-        return '';
+        return [];
     }
 
     private function buildSecurityCondition(string $type, SecurityCondition $securityCondition): SecurityCondition
@@ -135,6 +162,21 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         }
 
         return $parentPermissions;
+    }
+
+    /**
+     * @param array<string,bool> $basePermission
+     * @param array<string,bool> $subResult
+     *
+     * @return array<string,bool>
+     */
+    private function mergeDetailPermissions(array $basePermission, array $subResult): array
+    {
+        foreach ($basePermission as $key => $value) {
+            $basePermission[$key] = $value && ($subResult[$key] ?? false);
+        }
+
+        return $basePermission;
     }
 
     public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user, $system = null): array
