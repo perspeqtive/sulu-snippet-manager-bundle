@@ -47,7 +47,7 @@ readonly class SnippetAreaResponseListener
         $data = json_decode((string) $response->getContent(), true);
 
         $data['_embedded']['areas'] = $this->rebuildAreas($data['_embedded']['areas']);
-        $content = (string)json_encode($data);
+        $content = (string) json_encode($data);
         $response->setContent($content);
     }
 
