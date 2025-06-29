@@ -27,4 +27,6 @@ final readonly class PermissionTypes
     public const CONTEXT_TAXONOMIES = 'taxonomies';
 
     public const CONTEXT_INSIGHTS = 'insights';
+
+    public const CONTEXT_DEFAULT_SNIPPETS = 'default_snippets';
 }

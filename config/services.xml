@@ -31,7 +31,13 @@
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData\SnippetDefaultTypeSetterVisitor" id="perspeqtive_sulu_snippet_manager.form_meta_data.snippet_default_type_setter_visitor">
             <tag name="sulu_admin.typed_form_metadata_visitor"/>
         </service>
-
-
+        <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Configuration\ConfiguredSnippetTypesProvider" id="perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider">
+            <argument key="$snippetConfig" type="string">%sulu_snippet_manager.navigation%</argument>
+        </service>
+        <service class="PERSPEQTIVE\SuluSnippetManagerBundle\EventListener\SnippetAreaResponseListener" id="perspeqtive_sulu_snippet_manager.event_listener.snippet_area_response_listener">
+            <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
+            <argument key="$configuredSnippetTypesProvider" id="perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider" type="service"/>
+            <tag name="kernel.event_listener" event="kernel.response"/>
+        </service>
     </services>
 </container>

@@ -256,6 +256,9 @@ class ConfiguredSnippetAdminTest extends TestCase
                     'snippet_manager.testsnippet_insights' => [
                         PermissionTypes::EDIT,
                     ],
+                    'snippet_manager.testsnippet_default_snippets' => [
+                        PermissionTypes::EDIT,
+                    ],
                 ],
             ],
         ];

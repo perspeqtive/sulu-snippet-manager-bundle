@@ -268,6 +268,9 @@ class ConfiguredSnippetAdmin extends Admin
                     $this->buildSecurityContext(PermissionTypes::CONTEXT_INSIGHTS) => [
                         PermissionTypes::EDIT,
                     ],
+                    $this->buildSecurityContext(PermissionTypes::CONTEXT_DEFAULT_SNIPPETS) => [
+                        PermissionTypes::EDIT,
+                    ],
                 ],
             ],
         ];
