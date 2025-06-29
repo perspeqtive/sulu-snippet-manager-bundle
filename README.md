@@ -17,6 +17,7 @@ The **Sulu Snippet Manager Bundle** adds configurable snippet-based navigation i
 - Optional nested navigation items (e.g. under a main “Configuration” item)
 - Independent permission handling per snippet type and snippet navigation item
 - Easy custom snippet list view per snippet type
+- Hide default snippet area with snippet types, where a certain permission is not given.
 
 ## 🛠️ Installation
 ### Install the bundle via composer:
