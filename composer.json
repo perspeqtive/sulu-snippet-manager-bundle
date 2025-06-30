@@ -13,6 +13,13 @@
       "email": "ab@perspeqtive.de"
     }
   ],
+  "keywords": [
+    "sulu",
+    "snippet",
+    "manager",
+    "navigation",
+    "permissions"
+  ],
   "require": {
     "php": "^8.2",
     "sulu/sulu": "^2.6"
