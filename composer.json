@@ -1,6 +1,7 @@
 {
   "name": "perspeqtive/sulu-snippet-manager-bundle",
   "description": "Transform snippets in custom managers",
+  "type": "sulu-bundle",
   "license": "MIT",
   "authors": [
     {
