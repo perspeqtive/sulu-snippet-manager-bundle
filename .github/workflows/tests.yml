@@ -1,0 +1,34 @@
+name: Test application
+on:
+  pull_request: null
+  push:
+    branches:
+      - "main"
+
+jobs:
+  run:
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        php-versions: ['8.2', '8.3']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Code style
+        run: vendor/bin/php-cs-fixer check
+
+      - name: Static code analysis
+        run: vendor/bin/phpstan analyze
+
+      - name: Test code
+        run: phpunit
