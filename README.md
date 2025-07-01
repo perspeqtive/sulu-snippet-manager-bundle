@@ -45,7 +45,8 @@ Example configuration:
 sulu_snippet_manager:
     navigation:
         configuration:
-            navigation_title: "Configuration" 
+            navigation_title: "Configuration"
+            type: "configuration"
             order: 39
             icon: "su-news"
             children:
