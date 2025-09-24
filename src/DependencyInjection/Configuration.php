@@ -20,7 +20,6 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('navigation')
-                    ->isRequired()
                     ->useAttributeAsKey('name')
                     ->arrayPrototype()
                         ->children()
@@ -38,6 +37,7 @@ class Configuration implements ConfigurationInterface
                             ->thenInvalid("The 'type' must be defined when no children are given.")
                         ->end()
                     ->end()
+                    ->defaultValue([])
                 ->end()
             ->end();
 
