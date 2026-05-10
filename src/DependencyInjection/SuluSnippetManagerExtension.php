@@ -7,7 +7,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class SuluSnippetManagerExtension extends Extension
 {
@@ -19,7 +19,7 @@ class SuluSnippetManagerExtension extends Extension
 
         $container->setParameter('sulu_snippet_manager.navigation', $config['navigation'] ?? []);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
-        $loader->load('services.xml');
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+        $loader->load('services.yaml');
     }
 }

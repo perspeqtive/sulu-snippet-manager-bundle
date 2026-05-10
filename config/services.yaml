@@ -1,0 +1,66 @@
+services:
+    perspeqtive_sulu_snippet_manager.toolbar_actions.form_toolbar_builder:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\FormToolbarBuilder
+        arguments:
+            $securityChecker: '@sulu_security.security_checker'
+
+    perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\ToolbarActions\ListToolbarBuilder
+        arguments:
+            $securityChecker: '@sulu_security.security_checker'
+
+    perspeqtive_sulu_snippet_manager.admin.configured_parent_menu_admin:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredParentMenuAdmin
+        abstract: true
+        tags:
+            - { name: sulu.context, context: admin }
+
+    perspeqtive_sulu_snippet_manager.admin.configured_snippet_admin:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\Admin\ConfiguredSnippetAdmin
+        abstract: true
+        arguments:
+            $viewBuilderFactory: '@sulu_admin.view_builder_factory'
+            $securityChecker: '@sulu_security.security_checker'
+            $localizationProvider: '@sulu_core.webspace.webspace_manager'
+            $formToolbarBuilder: '@perspeqtive_sulu_snippet_manager.toolbar_actions.form_toolbar_builder'
+            $listToolbarBuilder: '@perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder'
+            $activityViewBuilderFactory: '@sulu_activity.activity_list_view_builder_factory'
+            $referenceViewBuilderFactory: '@sulu_reference.reference_list_view_builder_factory'
+            $excerptForms: '%sulu_content.content_excerpt_forms%'
+            $settingsForms: '%sulu_content.content_settings_forms%'
+        tags:
+            - { name: sulu.context, context: admin }
+
+    perspeqtive_sulu_snippet_manager.access.access_control_manager:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\Access\AccessControlManager
+        decorates: sulu_security.access_control_manager
+        arguments:
+            $accessControlManager: '@.inner'
+            $requestStack: '@request_stack'
+            $snippetRepository: '@sulu_snippet.snippet_repository'
+
+    perspeqtive_sulu_snippet_manager.form_meta_data.snippet_default_type_setter_visitor:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData\SnippetDefaultTypeSetterVisitor
+        tags:
+            - { name: sulu_admin.typed_form_metadata_visitor }
+
+    perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\Configuration\ConfiguredSnippetTypesProvider
+        arguments:
+            $snippetConfig: '%sulu_snippet_manager.navigation%'
+
+    perspeqtive_sulu_snippet_manager.event_listener.snippet_area_response_listener:
+        class: PERSPEQTIVE\SuluSnippetManagerBundle\EventListener\SnippetAreaResponseListener
+        arguments:
+            $securityChecker: '@sulu_security.security_checker'
+            $configuredSnippetTypesProvider: '@perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
+
+    PERSPEQTIVE\SuluSnippetManagerBundle\Serializer\SnippetAreaNormalizer:
+        arguments:
+            $securityChecker: '@sulu_security.security_checker'
+        calls:
+            - [setNormalizer, ['@serializer']]
+        tags:
+            - { name: serializer.normalizer }
