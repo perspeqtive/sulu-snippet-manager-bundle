@@ -35,6 +35,9 @@ class AccessControlManagerTest extends TestCase
             $this->oldManager,
             $this->requestStack,
             $this->snippetRepository,
+            [
+                'testarea' => ['template' => 'abc'],
+            ],
         );
     }
 
@@ -88,6 +91,18 @@ class AccessControlManagerTest extends TestCase
 
         $this->request->initialize(query: ['types' => 'shop,services']);
         $condition = new SecurityCondition('sulu.snippet.snippets');
+        $result = $this->manager->getUserPermissions($condition, null);
+
+        self::assertSame(['view' => true, 'edit' => false], $result);
+    }
+
+    public function testGetUserPermissionsMapsSnippetAreaToType(): void
+    {
+        $this->request->initialize(query: ['areas' => 'testarea']);
+        $condition = new SecurityCondition('sulu.snippet.snippets');
+
+        $this->oldManager->result['snippet_manager.abc'] = ['view' => false, 'edit' => false];
+
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);

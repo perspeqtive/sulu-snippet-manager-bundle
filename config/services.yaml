@@ -38,6 +38,7 @@ services:
             $accessControlManager: '@.inner'
             $requestStack: '@request_stack'
             $snippetRepository: '@sulu_snippet.snippet_repository'
+            $snippetAreas: '%sulu_snippet.areas%'
 
     perspeqtive_sulu_snippet_manager.form_meta_data.snippet_default_type_setter_visitor:
         class: PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData\SnippetDefaultTypeSetterVisitor

@@ -26,6 +26,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         private AccessControlManagerInterface $accessControlManager,
         private RequestStack $requestStack,
         private SnippetRepositoryInterface $snippetRepository,
+        private array $snippetAreas,
     ) {
     }
 
@@ -90,9 +91,9 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return [$type];
         }
 
-        $type = $request->query->get('areas');
-        if (is_string($type) === true && str_contains($type, ',') === false) {
-            return [$type];
+        $area = $request->query->get('areas');
+        if (is_string($area) === true && str_contains($area, ',') === false && isset($this->snippetAreas[$area]['template']) === true) {
+            return [$this->snippetAreas[$area]['template']];
         }
 
         /** @var ?string $type */
