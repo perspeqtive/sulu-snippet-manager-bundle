@@ -25,6 +25,10 @@ use function ucwords;
 
 class ConfiguredSnippetAdmin extends Admin
 {
+    /**
+     * @param array<string, array{instanceOf: class-string}> $settingsForms
+     * @param array<string, array{instanceOf: class-string}> $excerptForms
+     */
     public function __construct(
         private readonly ViewBuilderFactoryInterface $viewBuilderFactory,
         private readonly SecurityCheckerInterface $securityChecker,

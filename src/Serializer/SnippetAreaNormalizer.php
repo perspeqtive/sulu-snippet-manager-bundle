@@ -56,18 +56,26 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
         ];
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     private function modifyObject(array $context, mixed $object): mixed
     {
         if (
             isset($context['sulu_admin_snippet_list']) === false
             || $context['sulu_admin_snippet_list'] === false
-            || is_array($object) === false
-            || isset($object['_embedded']['snippet_areas']) === false
+            || !is_array($object)
         ) {
             return $object;
         }
 
+        if (!isset($object['_embedded']) || !is_array($object['_embedded']) || !isset($object['_embedded']['snippet_areas'])) {
+            return $object;
+        }
+
+        /** @var array{_embedded: array{snippet_areas: array<int, array{templateKey: string}>}} $object */
         $newAreas = [];
+        /** @var array<string, string> $area */
         foreach ($object['_embedded']['snippet_areas'] as $area) {
             $templateKey = $area['templateKey'];
             if ($this->securityChecker->hasPermission(

@@ -22,6 +22,9 @@ use function str_starts_with;
 
 readonly class AccessControlManager implements AccessControlManagerInterface
 {
+    /**
+     * @param array<string, array{template: string}> $snippetAreas
+     */
     public function __construct(
         private AccessControlManagerInterface $accessControlManager,
         private RequestStack $requestStack,
@@ -174,10 +177,10 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         $suluAttributes = $request->attributes->get('_sulu');
         /** @var ?string $locale */
         $locale = $suluAttributes?->getAttribute('locale');
-        /** @var string $id */
-        $id = $request->attributes->get('id', 'none');
+        /** @var ?string $id */
+        $id = $request->attributes->get('id', null);
 
-        if ($id === null || $id === 'none' || $locale === null) {
+        if ($id === null || $locale === null) {
             return null;
         }
 
