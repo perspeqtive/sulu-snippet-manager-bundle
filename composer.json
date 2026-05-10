@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": "^8.2",
-    "sulu/sulu": "^2.6"
+    "sulu/sulu": "^3.0"
   },
   "require-dev": {
     "jackalope/jackalope-doctrine-dbal": "^1.3.4 || ^2.0",
