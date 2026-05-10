@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Access;
 
 use Exception;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
+use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,11 +25,12 @@ use function str_starts_with;
 readonly class AccessControlManager implements AccessControlManagerInterface
 {
     public function __construct(
-        private AccessControlManagerInterface $accessControlManager,
-        private RequestStack $requestStack,
-        private DocumentManagerInterface $documentManager,
-        private DefaultSnippetManagerInterface $defaultSnippetManager,
-    ) {
+        private AccessControlManagerInterface  $accessControlManager,
+        private RequestStack                   $requestStack,
+        private SnippetRepositoryInterface     $snippetRepository,
+        private SnippetAreaRepositoryInterface $snippetAreaRepository,
+    )
+    {
     }
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user): array
@@ -38,13 +41,13 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return $parentPermissions;
         }
 
-        $types = $this->getRequestedTypes();
+        $types = $this->getRequestedTypes($securityCondition);
         if ($types === []) {
             return $parentPermissions;
         }
 
         /** @var array<string, bool> $permissions */
-        $permissions = array_map(fn () => true, $parentPermissions);
+        $permissions = array_map(fn() => true, $parentPermissions);
         foreach ($types as $type) {
             $subSecurityCondition = $this->buildSecurityCondition($type, $securityCondition);
             /** @var array<string, bool> $subResult */
@@ -58,7 +61,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
 
     private function shouldBeHandled(SecurityCondition $securityCondition): bool
     {
-        if ($securityCondition->getSecurityContext() !== 'sulu.global.snippets') {
+        if ($securityCondition->getSecurityContext() !== 'sulu.snippet.snippets') {
             return false;
         }
 
@@ -73,8 +76,13 @@ readonly class AccessControlManager implements AccessControlManagerInterface
     /**
      * @return string[]
      */
-    private function getRequestedTypes(): array
+    private function getRequestedTypes(SecurityCondition $securityCondition): array
     {
+        $securityType = $securityCondition->getObjectType();
+        if(empty($securityType) === false) {
+            return [$securityType];
+        }
+
         $request = $this->requestStack->getCurrentRequest();
         if ($request instanceof Request === false) {
             return [];
@@ -86,21 +94,15 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return [$type];
         }
 
-        /** @var ?string $type */
-        $type = $request->request->get('template');
+        $type = $request->query->get('areas');
         if (is_string($type) === true && str_contains($type, ',') === false) {
             return [$type];
         }
 
-        if ($request->query->has('areas')) {
-            /** @var string $areas */
-            $areas = $request->query->get('areas', '');
-            /** @var string[] $types */
-            $types = array_map(function ($area) {
-                return $this->defaultSnippetManager->getTypeForArea($area);
-            }, explode(',', $areas));
-
-            return $types;
+        /** @var ?string $type */
+        $type = $request->request->get('template');
+        if (is_string($type) === true && str_contains($type, ',') === false) {
+            return [$type];
         }
 
         return $this->reconstructSnippetTypeFromRequest($request);
@@ -120,22 +122,12 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return [];
         }
 
-        /** @var ?RequestAttributes $suluAttributes */
-        $suluAttributes = $request->attributes->get('_sulu');
-        /** @var ?string $locale */
-        $locale = $suluAttributes?->getAttribute('locale');
-        /** @var string $id */
-        $id = $request->attributes->get('id', 'none');
-
-        try {
-            /** @var SnippetDocument $snippet */
-            $snippet = $this->documentManager->find($id, $locale);
-
-            return [(string) $snippet->getStructureType()];
-        } catch (Exception) {
+        $templateKey = $this->getTemplateKeyFromSnippet($request);
+        if($templateKey === null) {
+            return [];
         }
 
-        return [];
+        return [$templateKey];
     }
 
     private function buildSecurityCondition(string $type, SecurityCondition $securityCondition): SecurityCondition
@@ -177,6 +169,51 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         }
 
         return $basePermission;
+    }
+
+    private function getTemplateKeyFromSnippet(Request $request): ?string
+    {
+        /** @var ?RequestAttributes $suluAttributes */
+        $suluAttributes = $request->attributes->get('_sulu');
+        /** @var ?string $locale */
+        $locale = $suluAttributes?->getAttribute('locale');
+        /** @var string $id */
+        $id = $request->attributes->get('id', 'none');
+
+        if($id === null || $locale === null) {
+            return null;
+        }
+
+        try {
+            $snippet = $this->snippetRepository->findOneBy(
+                [
+                    'uuid' => $id,
+                    'locale' => $locale,
+                    'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    'version' => DimensionContentInterface::CURRENT_VERSION,
+                ],
+                [
+                    SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                        'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                        'dimensionAttributes' => [
+                            'locale' => $locale,
+                            'stage' => [DimensionContentInterface::STAGE_DRAFT],
+                        ],
+                    ]
+                ]
+            );
+        } catch (Exception) {
+            return null;
+        }
+
+        /** @var SnippetDimensionContentInterface $dimensionContent */
+        foreach ($snippet->getDimensionContents() as $dimensionContent) {
+            if ($dimensionContent->getTemplateKey() === null) {
+                continue;
+            }
+            return $dimensionContent->getTemplateKey();
+        }
+        return null;
     }
 
     public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user, $system = null): array

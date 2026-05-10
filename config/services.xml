@@ -19,14 +19,16 @@
             <argument key="$listToolbarBuilder" id="perspeqtive_sulu_snippet_manager.toolbar_actions.list_toolbar_builder" type="service"/>
             <argument key="$activityViewBuilderFactory" id="sulu_activity.activity_list_view_builder_factory" type="service"/>
             <argument key="$referenceViewBuilderFactory" id="sulu_reference.reference_list_view_builder_factory" type="service"/>
+            <argument key="$excerptForms">%sulu_content.content_excerpt_forms%</argument>
+            <argument key="$settingsForms">%sulu_content.content_settings_forms%</argument>
             <tag name="sulu.context"  context="admin"/>
         </service>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\Access\AccessControlManager" id="perspeqtive_sulu_snippet_manager.access.access_control_manager"
                  decorates="sulu_security.access_control_manager">
             <argument key="$accessControlManager" type="service" id=".inner"/>
             <argument key="$requestStack" type="service" id="request_stack"/>
-            <argument key="$documentManager" type="service" id="sulu_document_manager.document_manager"/>
-            <argument key="$defaultSnippetManager" type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument key="$snippetRepository" type="service" id="sulu_snippet.snippet_repository" />
+            <argument key="$snippetAreaRepository" type="service" id="sulu_snippet.snippet_area_repository"/>
         </service>
         <service class="PERSPEQTIVE\SuluSnippetManagerBundle\FormMetaData\SnippetDefaultTypeSetterVisitor" id="perspeqtive_sulu_snippet_manager.form_meta_data.snippet_default_type_setter_visitor">
             <tag name="sulu_admin.typed_form_metadata_visitor"/>
@@ -38,6 +40,13 @@
             <argument key="$securityChecker" id="sulu_security.security_checker" type="service"/>
             <argument key="$configuredSnippetTypesProvider" id="perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider" type="service"/>
             <tag name="kernel.event_listener" event="kernel.response"/>
+        </service>
+        <service id="PERSPEQTIVE\SuluSnippetManagerBundle\Serializer\SnippetAreaNormalizer">
+            <argument id="sulu_security.security_checker" type="service"/>
+            <call method="setNormalizer">
+                <argument id="serializer" type="service"/>
+            </call>
+            <tag name="serializer.normalizer"/>
         </service>
     </services>
 </container>

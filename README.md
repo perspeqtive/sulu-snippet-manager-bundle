@@ -55,7 +55,7 @@ sulu_snippet_manager:
                     type: "settings"
                     order: 0
                     icon: "su-settings"
-                    snippet_list_view: "my-custom-view"
+                    list_view_key: "my-custom-view"
                 account:
                     navigation_title: "Account Settings"
                     type: "account"
