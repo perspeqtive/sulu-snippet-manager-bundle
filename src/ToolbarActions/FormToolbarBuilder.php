@@ -36,17 +36,25 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
      */
     private function buildEditAction(string $securityContext, array $formToolbarActions): array
     {
-        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
-            $editDropdownToolbarActions = [new ToolbarAction('sulu_admin.copy', [
-                'visible_condition' => '!!id',
-            ])];
-            $formToolbarActions[] = new DropdownToolbarAction(
-                'sulu_admin.edit',
-                'su-pen',
-                $editDropdownToolbarActions,
-            );
+        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT) === false) {
+            return $formToolbarActions;
         }
+        $formToolbarActions[] = new ToolbarAction(
+            'sulu_admin.save_with_publishing',
+            [
+                'publish_visible_condition' => '(!_permissions || _permissions.live)',
+                'save_visible_condition' => '(!_permissions || _permissions.edit)',
+            ]
+        );
+        $editDropdownToolbarActions = [new ToolbarAction('sulu_admin.copy', [
+            'visible_condition' => '!!id',
+        ])];
+        $formToolbarActions[] = new DropdownToolbarAction(
+            'sulu_admin.edit',
+            'su-pen',
+            $editDropdownToolbarActions,
+        );
+
 
         return $formToolbarActions;
     }
@@ -58,10 +66,19 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
      */
     private function buildDeleteAction(string $view, string $securityContext, array $formToolbarActions): array
     {
-        if ($this->isEditView($view)
-            && $this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+        if ($this->isEditView($view) === false
+            ||
+            $this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE) === false
+        ) {
+            return $formToolbarActions;
         }
+
+        $formToolbarActions[] = new ToolbarAction(
+            'sulu_admin.delete',
+            [
+                'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+            ]
+        );
 
         return $formToolbarActions;
     }
