@@ -27,10 +27,10 @@ class FormToolbarBuilderTest extends TestCase
         self::assertEquals([
             new ToolbarAction('sulu_admin.save_with_publishing', [
                 'publish_visible_condition' => '(!_permissions || _permissions.live)',
-                'save_visible_condition' => '(!_permissions || _permissions.edit)'
+                'save_visible_condition' => '(!_permissions || _permissions.edit)',
             ]),
             new DropdownToolbarAction('sulu_admin.edit', 'su-pen', [
-                new ToolbarAction('sulu_admin.copy', ['visible_condition' => '!!id'])
+                new ToolbarAction('sulu_admin.copy', ['visible_condition' => '!!id']),
             ]),
         ], $toolbars);
     }
@@ -55,7 +55,7 @@ class FormToolbarBuilderTest extends TestCase
         self::assertEquals([
             new ToolbarAction('sulu_admin.save_with_publishing', [
                 'publish_visible_condition' => '(!_permissions || _permissions.live)',
-                'save_visible_condition' => '(!_permissions || _permissions.edit)'
+                'save_visible_condition' => '(!_permissions || _permissions.edit)',
             ]),
             new DropdownToolbarAction('sulu_admin.edit', 'su-pen', [new ToolbarAction('sulu_admin.copy', ['visible_condition' => '!!id'])]),
         ], $toolbars);
@@ -84,8 +84,8 @@ class FormToolbarBuilderTest extends TestCase
         $toolbars = $toolbarBuilder->build('security-context', 'some-view.edit');
         self::assertEquals([
             new ToolbarAction('sulu_admin.delete', [
-                'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"'
-            ])
+                'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+            ]),
         ], $toolbars);
     }
 }

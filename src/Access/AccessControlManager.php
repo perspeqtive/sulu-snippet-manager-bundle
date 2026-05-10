@@ -11,13 +11,11 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 use function array_map;
-use function explode;
 use function is_string;
 use function str_contains;
 use function str_starts_with;
@@ -25,11 +23,10 @@ use function str_starts_with;
 readonly class AccessControlManager implements AccessControlManagerInterface
 {
     public function __construct(
-        private AccessControlManagerInterface  $accessControlManager,
-        private RequestStack                   $requestStack,
-        private SnippetRepositoryInterface     $snippetRepository,
-    )
-    {
+        private AccessControlManagerInterface $accessControlManager,
+        private RequestStack $requestStack,
+        private SnippetRepositoryInterface $snippetRepository,
+    ) {
     }
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user): array
@@ -46,7 +43,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         }
 
         /** @var array<string, bool> $permissions */
-        $permissions = array_map(fn() => true, $parentPermissions);
+        $permissions = array_map(static fn () => true, $parentPermissions);
         foreach ($types as $type) {
             $subSecurityCondition = $this->buildSecurityCondition($type, $securityCondition);
             /** @var array<string, bool> $subResult */
@@ -78,7 +75,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
     private function getRequestedTypes(SecurityCondition $securityCondition): array
     {
         $securityType = $securityCondition->getObjectType();
-        if(empty($securityType) === false) {
+        if (empty($securityType) === false) {
             return [$securityType];
         }
 
@@ -122,7 +119,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         }
 
         $templateKey = $this->getTemplateKeyFromSnippet($request);
-        if($templateKey === null) {
+        if ($templateKey === null) {
             return [];
         }
 
@@ -179,7 +176,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         /** @var string $id */
         $id = $request->attributes->get('id', 'none');
 
-        if($id === null || $id === 'none' || $locale === null) {
+        if ($id === null || $id === 'none' || $locale === null) {
             return null;
         }
 
@@ -198,8 +195,8 @@ readonly class AccessControlManager implements AccessControlManagerInterface
                             'locale' => $locale,
                             'stage' => [DimensionContentInterface::STAGE_DRAFT],
                         ],
-                    ]
-                ]
+                    ],
+                ],
             );
         } catch (Exception) {
             return null;
@@ -210,8 +207,10 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             if ($dimensionContent->getTemplateKey() === null) {
                 continue;
             }
+
             return $dimensionContent->getTemplateKey();
         }
+
         return null;
     }
 

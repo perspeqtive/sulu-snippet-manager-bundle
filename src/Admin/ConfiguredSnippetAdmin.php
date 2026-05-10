@@ -15,12 +15,12 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactoryInterface;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
-
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
+
 use function explode;
 use function implode;
+use function is_subclass_of;
 use function ucwords;
 
 class ConfiguredSnippetAdmin extends Admin
@@ -33,8 +33,8 @@ class ConfiguredSnippetAdmin extends Admin
         private readonly ListToolbarBuilderInterface $listToolbarBuilder,
         private readonly ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
         private readonly ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory,
-        private readonly array $excerptForms = [],
-        private readonly array $settingsForms = [],
+        private readonly array $excerptForms,
+        private readonly array $settingsForms,
         private readonly string $snippetType,
         private readonly string $navigationTitle,
         private readonly string $listViewKey,
@@ -176,7 +176,7 @@ class ConfiguredSnippetAdmin extends Admin
 
         $forms = [];
         foreach ($this->excerptForms as $key => $tag) {
-            if (\is_subclass_of(SnippetDimensionContent::class, $tag['instanceOf']) || SnippetDimensionContent::class === $tag['instanceOf']) {
+            if (is_subclass_of(SnippetDimensionContent::class, $tag['instanceOf']) || SnippetDimensionContent::class === $tag['instanceOf']) {
                 $forms[] = $key;
             }
         }
@@ -211,7 +211,7 @@ class ConfiguredSnippetAdmin extends Admin
 
         $forms = [];
         foreach ($this->settingsForms as $key => $tag) {
-            if (\is_subclass_of(SnippetDimensionContent::class, $tag['instanceOf']) || SnippetDimensionContent::class === $tag['instanceOf']) {
+            if (is_subclass_of(SnippetDimensionContent::class, $tag['instanceOf']) || SnippetDimensionContent::class === $tag['instanceOf']) {
                 $forms[] = $key;
             }
         }

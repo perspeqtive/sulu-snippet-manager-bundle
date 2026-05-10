@@ -44,7 +44,7 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
             [
                 'publish_visible_condition' => '(!_permissions || _permissions.live)',
                 'save_visible_condition' => '(!_permissions || _permissions.edit)',
-            ]
+            ],
         );
         $editDropdownToolbarActions = [new ToolbarAction('sulu_admin.copy', [
             'visible_condition' => '!!id',
@@ -54,7 +54,6 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
             'su-pen',
             $editDropdownToolbarActions,
         );
-
 
         return $formToolbarActions;
     }
@@ -67,8 +66,7 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
     private function buildDeleteAction(string $view, string $securityContext, array $formToolbarActions): array
     {
         if ($this->isEditView($view) === false
-            ||
-            $this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE) === false
+            || $this->securityChecker->hasPermission($securityContext, PermissionTypes::DELETE) === false
         ) {
             return $formToolbarActions;
         }
@@ -77,7 +75,7 @@ readonly class FormToolbarBuilder implements FormToolbarBuilderInterface
             'sulu_admin.delete',
             [
                 'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-            ]
+            ],
         );
 
         return $formToolbarActions;

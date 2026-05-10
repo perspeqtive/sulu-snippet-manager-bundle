@@ -22,7 +22,7 @@ class SnippetAreaNormalizerTest extends TestCase
         $this->normalizer = new MockNormalizer(['normalized-result']);
 
         $this->snippetAreaNormalizer = new SnippetAreaNormalizer(
-            $this->securityChecker
+            $this->securityChecker,
         );
         $this->snippetAreaNormalizer->setNormalizer($this->normalizer);
     }
@@ -34,25 +34,25 @@ class SnippetAreaNormalizerTest extends TestCase
         self::assertTrue($this->snippetAreaNormalizer->supportsNormalization(
             $data,
             null,
-            ['sulu_admin_snippet_list' => true]
+            ['sulu_admin_snippet_list' => true],
         ));
 
         self::assertFalse($this->snippetAreaNormalizer->supportsNormalization(
             $data,
             null,
-            ['sulu_admin_snippet_list' => false]
+            ['sulu_admin_snippet_list' => false],
         ));
 
         self::assertFalse($this->snippetAreaNormalizer->supportsNormalization(
             $data,
             null,
-            [SnippetAreaNormalizer::class => true]
+            [SnippetAreaNormalizer::class => true],
         ));
 
         self::assertFalse($this->snippetAreaNormalizer->supportsNormalization(
             ['other' => 'data'],
             null,
-            ['sulu_admin_snippet_list' => true]
+            ['sulu_admin_snippet_list' => true],
         ));
     }
 
@@ -93,7 +93,7 @@ class SnippetAreaNormalizerTest extends TestCase
 
         self::assertSame($expectedModifiedData, $this->normalizer->dataToNormalize);
         self::assertSame(['sulu_admin_snippet_list' => true, SnippetAreaNormalizer::class => true], $this->normalizer->context);
-       self::assertSame(['normalized-data'], $result);
+        self::assertSame(['normalized-data'], $result);
     }
 
     public function testNormalizeWithoutCorrectContext(): void

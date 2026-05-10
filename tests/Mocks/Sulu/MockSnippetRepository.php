@@ -11,20 +11,16 @@ use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 class MockSnippetRepository implements SnippetRepositoryInterface
 {
-
     public function __construct(public ?Snippet $findOneByResult = null)
     {
-
     }
 
     public function createNew(?string $uuid = null): SnippetInterface
     {
-
     }
 
     public function getOneBy(array $filters, array $selects = []): SnippetInterface
     {
-
     }
 
     public function findOneBy(array $filters, array $selects = []): ?SnippetInterface
@@ -34,31 +30,25 @@ class MockSnippetRepository implements SnippetRepositoryInterface
 
     public function findBy(array $filters = [], array $sortBy = [], array $selects = []): iterable
     {
-
     }
 
     public function findIdentifiersBy(array $filters = [], array $sortBy = []): iterable
     {
-
     }
 
     public function countBy(array $filters = []): int
     {
-
     }
 
     public function add(SnippetInterface $snippet): void
     {
-
     }
 
     public function remove(SnippetInterface $snippet): void
     {
-
     }
 
     public function removeDimensionContent(DimensionContentInterface $dimensionContent): void
     {
-
     }
 }

@@ -335,8 +335,8 @@ class ConfiguredSnippetAdminTest extends TestCase
                 'excerpt-form2' => ['instanceOf' => ExcerptInterface::class],
             ],
             [
-                'settings-form1' => ['instanceOf' =>  AuditableInterface::class],
-                'settings-form2' => ['instanceOf' =>  ShadowInterface::class],
+                'settings-form1' => ['instanceOf' => AuditableInterface::class],
+                'settings-form2' => ['instanceOf' => ShadowInterface::class],
             ],
             $snippetType,
             $navigationTitle,

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Serializer;
 
+use ArrayObject;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Security\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+use function array_merge;
+use function is_array;
 
 class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
@@ -23,7 +27,7 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
     /**
      * @param array<string, mixed> $context
      */
-    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|ArrayObject|null
     {
         $data = $this->modifyObject($context, $data);
 
@@ -39,10 +43,10 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
             return false;
         }
 
-        return isset($context['sulu_admin_snippet_list']) === true &&
-            $context['sulu_admin_snippet_list'] === true &&
-            is_array($data) === true &&
-            isset($data['_embedded']) === true;
+        return isset($context['sulu_admin_snippet_list']) === true
+            && $context['sulu_admin_snippet_list'] === true
+            && is_array($data) === true
+            && isset($data['_embedded']) === true;
     }
 
     public function getSupportedTypes(?string $format): array
@@ -55,10 +59,10 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
     private function modifyObject(array $context, mixed $object): mixed
     {
         if (
-            isset($context['sulu_admin_snippet_list']) === false ||
-            $context['sulu_admin_snippet_list'] === false ||
-            is_array($object) === false ||
-            isset($object['_embedded']['snippet_areas']) === false
+            isset($context['sulu_admin_snippet_list']) === false
+            || $context['sulu_admin_snippet_list'] === false
+            || is_array($object) === false
+            || isset($object['_embedded']['snippet_areas']) === false
         ) {
             return $object;
         }
@@ -67,8 +71,8 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
         foreach ($object['_embedded']['snippet_areas'] as $area) {
             $templateKey = $area['templateKey'];
             if ($this->securityChecker->hasPermission(
-                new SecurityCondition('snippet_manager.' .$templateKey .'_' . PermissionTypes::CONTEXT_DEFAULT_SNIPPETS),
-                PermissionTypes::EDIT
+                new SecurityCondition('snippet_manager.' . $templateKey . '_' . PermissionTypes::CONTEXT_DEFAULT_SNIPPETS),
+                PermissionTypes::EDIT,
             )) {
                 $newAreas[] = $area;
             }

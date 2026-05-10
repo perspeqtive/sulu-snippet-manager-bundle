@@ -160,5 +160,4 @@ class AccessControlManagerTest extends TestCase
 
         self::assertSame(['view' => true, 'edit' => true], $result);
     }
-
 }
