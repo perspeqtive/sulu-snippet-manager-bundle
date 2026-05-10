@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu;
 
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MockSecurityChecker implements SecurityCheckerInterface
 {
-    public string $subjectName = '';
+    public string|SecurityCondition $subjectName = '';
 
     public function __construct(
         public array $hasPermission = ['*' => true],
@@ -28,8 +29,10 @@ class MockSecurityChecker implements SecurityCheckerInterface
     {
         $this->subjectName = $subject;
 
-        return (isset($this->hasPermission[$subject][$permission]) && $this->hasPermission[$subject][$permission] === true)
-            || (isset($this->hasPermission[$subject]['*']) && $this->hasPermission[$subject]['*'] === true)
+        $subjectString = $subject instanceof SecurityCondition ? $subject->getSecurityContext() : $subject;
+
+        return (isset($this->hasPermission[$subjectString][$permission]) && $this->hasPermission[$subjectString][$permission] === true)
+            || (isset($this->hasPermission[$subjectString]['*']) && $this->hasPermission[$subjectString]['*'] === true)
             || (isset($this->hasPermission['*']) && $this->hasPermission['*'] === true);
     }
 }

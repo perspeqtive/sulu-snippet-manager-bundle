@@ -16,7 +16,7 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
     use NormalizerAwareTrait;
 
     public function __construct(
-        private SecurityCheckerInterface $securityChecker,
+        private readonly SecurityCheckerInterface $securityChecker,
     ) {
     }
 
