@@ -9,7 +9,7 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 
 class MockAccessControlManager implements AccessControlManagerInterface
 {
-    public function __construct(public array $result = ['sulu.global.snippets' => ['view' => true, 'edit' => false]])
+    public function __construct(public array $result = ['sulu.snippet.snippets' => ['view' => true, 'edit' => false]])
     {
     }
 

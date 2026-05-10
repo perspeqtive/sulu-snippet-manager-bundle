@@ -6,11 +6,12 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Unit\Access;
 
 use PERSPEQTIVE\SuluSnippetManagerBundle\Access\AccessControlManager;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockAccessControlManager;
-use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockDefaultSnippetManager;
-use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockDocumentManager;
+use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockSnippetRepository;
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Snippet\Domain\Model\Snippet;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -19,9 +20,8 @@ class AccessControlManagerTest extends TestCase
     private Request $request;
     private MockAccessControlManager $oldManager;
     private AccessControlManager $manager;
-    private MockDocumentManager $documentManager;
+    private MockSnippetRepository $snippetRepository;
     private RequestStack $requestStack;
-    private MockDefaultSnippetManager $defaultSnippetManager;
 
     protected function setUp(): void
     {
@@ -30,13 +30,11 @@ class AccessControlManagerTest extends TestCase
         $this->requestStack->push($this->request);
 
         $this->oldManager = new MockAccessControlManager();
-        $this->documentManager = new MockDocumentManager();
-        $this->defaultSnippetManager = new MockDefaultSnippetManager();
+        $this->snippetRepository = new MockSnippetRepository();
         $this->manager = new AccessControlManager(
             $this->oldManager,
             $this->requestStack,
-            $this->documentManager,
-            $this->defaultSnippetManager,
+            $this->snippetRepository,
         );
     }
 
@@ -57,7 +55,7 @@ class AccessControlManagerTest extends TestCase
 
     public function testGetUserPermissionsDoesNotOverwriteWhenObjectIdIsSet(): void
     {
-        $condition = new SecurityCondition('sulu.global.snippets', 'de', 'snippets', 'aa-bb');
+        $condition = new SecurityCondition('sulu.snippet.snippets', 'de', 'snippets', 'aa-bb');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -66,7 +64,7 @@ class AccessControlManagerTest extends TestCase
     public function testGetUserPermissionsDoesNotOverwriteWhenRequestIsEmpty(): void
     {
         $this->requestStack->pop();
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -74,7 +72,7 @@ class AccessControlManagerTest extends TestCase
 
     public function testGetUserPermissionsDoesNotOverwriteWIthEmptyTypes(): void
     {
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -83,13 +81,13 @@ class AccessControlManagerTest extends TestCase
     public function testGetUserPermissionsDoesNotOverwriteWithNotHandlableTypes(): void
     {
         $this->request->initialize(query: ['types' => '']);
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
 
         $this->request->initialize(query: ['types' => 'shop,services']);
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -99,7 +97,7 @@ class AccessControlManagerTest extends TestCase
     {
         $this->request->initialize(query: [], attributes: []);
 
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -109,7 +107,7 @@ class AccessControlManagerTest extends TestCase
     {
         $this->request->initialize(query: [], attributes: ['_route' => 'some_random_snippet']);
 
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -119,7 +117,7 @@ class AccessControlManagerTest extends TestCase
     {
         $this->request->initialize(query: [], attributes: ['_route' => 'sulu_snippet.add']);
 
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => false], $result);
@@ -128,12 +126,16 @@ class AccessControlManagerTest extends TestCase
     public function testGetUserPermissionsUsesTypeOfFoundSnippet(): void
     {
         $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
-        $foundDoc = new SnippetDocument();
-        $foundDoc->setStructureType('shop');
-        $this->documentManager->foundDocument = $foundDoc;
-        $this->request->initialize(query: [], attributes: ['_route' => 'sulu_snippet.add']);
 
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $foundDoc = new Snippet();
+        $dimensionContent = new SnippetDimensionContent($foundDoc);
+        $dimensionContent->setTemplateKey('shop');
+        $foundDoc->addDimensionContent($dimensionContent);
+
+        $this->snippetRepository->findOneByResult = $foundDoc;
+        $this->request->initialize(query: [], attributes: ['_route' => 'sulu_snippet.put_snippet', 'id' => '123', '_sulu' => new RequestAttributes(['locale' => 'de'])]);
+
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => true], $result);
@@ -143,7 +145,7 @@ class AccessControlManagerTest extends TestCase
     {
         $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
         $this->request->initialize(query: ['types' => 'shop']);
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => true], $result);
@@ -153,36 +155,10 @@ class AccessControlManagerTest extends TestCase
     {
         $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
         $this->request->initialize(request: ['template' => 'shop']);
-        $condition = new SecurityCondition('sulu.global.snippets');
+        $condition = new SecurityCondition('sulu.snippet.snippets');
         $result = $this->manager->getUserPermissions($condition, null);
 
         self::assertSame(['view' => true, 'edit' => true], $result);
     }
 
-    public function testGetUserPermissionsUsesAreasFromRequestWithSingleArea(): void
-    {
-        $this->oldManager->result = ['sulu.global.snippets' => ['view' => false, 'edit' => false]];
-        $this->defaultSnippetManager->typeForArea['shop-area'] = 'shop';
-
-        $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
-        $this->request->initialize(query: ['areas' => 'shop-area']);
-        $condition = new SecurityCondition('sulu.global.snippets');
-        $result = $this->manager->getUserPermissions($condition, null);
-
-        self::assertSame(['view' => true, 'edit' => true], $result);
-    }
-
-    public function testGetUserPermissionsUsesAreasFromRequestWithMultipleAreasWithOneFalseKeepsFalse(): void
-    {
-        $this->defaultSnippetManager->typeForArea['shop-area'] = 'shop';
-        $this->defaultSnippetManager->typeForArea['services-area'] = 'services';
-
-        $this->oldManager->result['snippet_manager.shop'] = ['view' => true, 'edit' => true];
-        $this->oldManager->result['snippet_manager.services'] = ['view' => false, 'edit' => false];
-        $this->request->initialize(query: ['areas' => 'shop-area,services-area']);
-        $condition = new SecurityCondition('sulu.global.snippets');
-        $result = $this->manager->getUserPermissions($condition, null);
-
-        self::assertSame(['view' => true, 'edit' => false], $result);
-    }
 }

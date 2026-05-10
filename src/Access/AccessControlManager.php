@@ -11,7 +11,6 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
-use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,7 +27,6 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         private AccessControlManagerInterface  $accessControlManager,
         private RequestStack                   $requestStack,
         private SnippetRepositoryInterface     $snippetRepository,
-        private SnippetAreaRepositoryInterface $snippetAreaRepository,
     )
     {
     }

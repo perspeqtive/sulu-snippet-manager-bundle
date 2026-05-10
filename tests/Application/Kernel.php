@@ -7,6 +7,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Application;
 use Exception;
 use PERSPEQTIVE\SuluSnippetManagerBundle\SuluSnippetManagerBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
@@ -20,6 +21,7 @@ class Kernel extends SuluTestKernel
         /** @var BundleInterface[] $bundles */
         $bundles = parent::registerBundles();
         $bundles[] = new SuluSnippetManagerBundle();
+        $bundles[] = new SuluSnippetBundle();
 
         return $bundles;
     }
