@@ -11,6 +11,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -178,7 +179,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         /** @var string $id */
         $id = $request->attributes->get('id', 'none');
 
-        if($id === null || $locale === null) {
+        if($id === null || $id === 'none' || $locale === null) {
             return null;
         }
 
@@ -205,7 +206,7 @@ readonly class AccessControlManager implements AccessControlManagerInterface
         }
 
         /** @var SnippetDimensionContentInterface $dimensionContent */
-        foreach ($snippet->getDimensionContents() as $dimensionContent) {
+        foreach ($snippet?->getDimensionContents() as $dimensionContent) {
             if ($dimensionContent->getTemplateKey() === null) {
                 continue;
             }
