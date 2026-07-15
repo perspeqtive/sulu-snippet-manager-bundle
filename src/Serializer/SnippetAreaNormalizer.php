@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PERSPEQTIVE\SuluSnippetManagerBundle\Serializer;
 
 use ArrayObject;
+use PERSPEQTIVE\SuluSnippetManagerBundle\EventListener\ConfiguredSnippetTypesProviderInterface;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Security\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -13,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 use function array_merge;
+use function in_array;
 use function is_array;
 
 class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInterface
@@ -21,6 +23,7 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
 
     public function __construct(
         private readonly SecurityCheckerInterface $securityChecker,
+        private readonly ConfiguredSnippetTypesProviderInterface $configuredSnippetTypesProvider,
     ) {
     }
 
@@ -73,11 +76,21 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
             return $object;
         }
 
+        $configuredTypes = $this->configuredSnippetTypesProvider->getConfiguredSnippetTypes();
+
         /** @var array{_embedded: array{snippet_areas: array<int, array{templateKey: string}>}} $object */
         $newAreas = [];
         /** @var array<string, string> $area */
         foreach ($object['_embedded']['snippet_areas'] as $area) {
             $templateKey = $area['templateKey'];
+
+            // Areas that are not managed by this bundle have no snippet_manager permission
+            // context, so the permission check must not remove them.
+            if (in_array($templateKey, $configuredTypes, true) === false) {
+                $newAreas[] = $area;
+                continue;
+            }
+
             if ($this->securityChecker->hasPermission(
                 new SecurityCondition('snippet_manager.' . $templateKey . '_' . PermissionTypes::CONTEXT_DEFAULT_SNIPPETS),
                 PermissionTypes::EDIT,
