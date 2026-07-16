@@ -84,9 +84,7 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
         foreach ($object['_embedded']['snippet_areas'] as $area) {
             $templateKey = $area['templateKey'];
 
-            // Areas that are not managed by this bundle have no snippet_manager permission
-            // context, so the permission check must not remove them.
-            if (in_array($templateKey, $configuredTypes, true) === false) {
+            if ($this->isManaged($templateKey, $configuredTypes) === false) {
                 $newAreas[] = $area;
                 continue;
             }
@@ -101,5 +99,16 @@ class SnippetAreaNormalizer implements NormalizerInterface, NormalizerAwareInter
         $object['_embedded']['snippet_areas'] = $newAreas;
 
         return $object;
+    }
+
+    /**
+     * Only areas managed by this bundle have a snippet_manager permission context
+     * and may be filtered by the permission check.
+     *
+     * @param string[] $configuredTypes
+     */
+    private function isManaged(string $templateKey, array $configuredTypes): bool
+    {
+        return in_array($templateKey, $configuredTypes, true);
     }
 }
