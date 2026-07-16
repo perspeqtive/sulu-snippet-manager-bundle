@@ -113,9 +113,6 @@ class SnippetAreaNormalizerTest extends TestCase
 
         $context = ['sulu_admin_snippet_list' => true];
 
-        // No permissions at all: managed areas are filtered out, but areas that are
-        // not configured in this bundle have no snippet_manager permission context
-        // and must be kept.
         $this->securityChecker->hasPermission = ['*' => false];
 
         $expectedModifiedData = [
