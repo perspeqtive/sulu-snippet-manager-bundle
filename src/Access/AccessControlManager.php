@@ -206,8 +206,9 @@ readonly class AccessControlManager implements AccessControlManagerInterface
             return null;
         }
 
-        /** @var SnippetDimensionContentInterface $dimensionContent */
-        foreach ($snippet?->getDimensionContents() as $dimensionContent) {
+        /** @var iterable<int, SnippetDimensionContentInterface> $dimensionContents */
+        $dimensionContents = $snippet?->getDimensionContents() ?? [];
+        foreach ($dimensionContents as $dimensionContent) {
             if ($dimensionContent->getTemplateKey() === null) {
                 continue;
             }

@@ -6,6 +6,7 @@ namespace PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Unit\Serializer;
 
 use PERSPEQTIVE\SuluSnippetManagerBundle\Security\PermissionTypes;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Serializer\SnippetAreaNormalizer;
+use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\MockConfiguredSnippetTypesProvider;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Sulu\MockSecurityChecker;
 use PERSPEQTIVE\SuluSnippetManagerBundle\Tests\Mocks\Symfony\MockNormalizer;
 use PHPUnit\Framework\TestCase;
@@ -13,16 +14,19 @@ use PHPUnit\Framework\TestCase;
 class SnippetAreaNormalizerTest extends TestCase
 {
     private MockSecurityChecker $securityChecker;
+    private MockConfiguredSnippetTypesProvider $configuredSnippetTypesProvider;
     private MockNormalizer $normalizer;
     private SnippetAreaNormalizer $snippetAreaNormalizer;
 
     protected function setUp(): void
     {
         $this->securityChecker = new MockSecurityChecker(['*' => false]);
+        $this->configuredSnippetTypesProvider = new MockConfiguredSnippetTypesProvider(['area1', 'area2']);
         $this->normalizer = new MockNormalizer(['normalized-result']);
 
         $this->snippetAreaNormalizer = new SnippetAreaNormalizer(
             $this->securityChecker,
+            $this->configuredSnippetTypesProvider,
         );
         $this->snippetAreaNormalizer->setNormalizer($this->normalizer);
     }
@@ -93,6 +97,37 @@ class SnippetAreaNormalizerTest extends TestCase
 
         self::assertSame($expectedModifiedData, $this->normalizer->dataToNormalize);
         self::assertSame(['sulu_admin_snippet_list' => true, SnippetAreaNormalizer::class => true], $this->normalizer->context);
+        self::assertSame(['normalized-data'], $result);
+    }
+
+    public function testNormalizeKeepsAreasThatAreNotManagedByTheBundle(): void
+    {
+        $data = [
+            '_embedded' => [
+                'snippet_areas' => [
+                    ['templateKey' => 'area1'],
+                    ['templateKey' => 'unmanaged_area'],
+                ],
+            ],
+        ];
+
+        $context = ['sulu_admin_snippet_list' => true];
+
+        $this->securityChecker->hasPermission = ['*' => false];
+
+        $expectedModifiedData = [
+            '_embedded' => [
+                'snippet_areas' => [
+                    ['templateKey' => 'unmanaged_area'],
+                ],
+            ],
+        ];
+
+        $this->normalizer->result = ['normalized-data'];
+
+        $result = $this->snippetAreaNormalizer->normalize($data, null, $context);
+
+        self::assertSame($expectedModifiedData, $this->normalizer->dataToNormalize);
         self::assertSame(['normalized-data'], $result);
     }
 

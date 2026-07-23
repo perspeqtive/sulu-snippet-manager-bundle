@@ -61,6 +61,7 @@ services:
     PERSPEQTIVE\SuluSnippetManagerBundle\Serializer\SnippetAreaNormalizer:
         arguments:
             $securityChecker: '@sulu_security.security_checker'
+            $configuredSnippetTypesProvider: '@perspeqtive_sulu_snippet_manager.configuration.configured_snippet_types_provider'
         calls:
             - [setNormalizer, ['@serializer']]
         tags:
