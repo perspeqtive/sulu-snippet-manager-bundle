@@ -148,7 +148,7 @@ class ConfiguredSnippetAdminTest extends TestCase
             'addView' => 'sulu_snippet_manager_testsnippet.add',
             'toolbarActions' => ['save', 'delete'],
             'locales' => ['de', 'en'],
-            'requestParameters' => ['types' => 'testsnippet'],
+            'requestParameters' => ['types' => 'testsnippet', 'templateKeys' => 'testsnippet'],
         ], $listView->getView());
 
         $editFormView = $views['sulu_snippet_manager_testsnippet.edit.details'];

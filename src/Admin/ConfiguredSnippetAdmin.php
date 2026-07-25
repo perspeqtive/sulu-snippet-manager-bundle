@@ -103,7 +103,14 @@ class ConfiguredSnippetAdmin extends Admin
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addLocales($this->localizationProvider->getAllLocales())
                 ->enableFiltering()
-                ->addRequestParameters(['types' => $this->snippetType]),
+                // Sulu >= 3.0.8 filters the snippet list by the "templateKeys" query
+                // parameter; older versions use "types". Send both so the list is
+                // filtered on every supported Sulu 3.0 version. AccessControlManager
+                // still reads "types" for permission checks.
+                ->addRequestParameters([
+                    'types' => $this->snippetType,
+                    'templateKeys' => $this->snippetType,
+                ]),
         );
     }
 
