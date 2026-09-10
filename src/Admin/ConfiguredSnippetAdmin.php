@@ -125,7 +125,7 @@ class ConfiguredSnippetAdmin extends Admin
             $this->viewBuilderFactory->createFormViewBuilder($this->buildViewName(ViewTypes::ADD) . '.content', '/content')
                 ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.content')
+                ->setTabTitle('sulu_content.content')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
@@ -142,7 +142,7 @@ class ConfiguredSnippetAdmin extends Admin
                 ->createFormViewBuilder($this->buildViewName(ViewTypes::EDIT) . '.content', '/content')
                 ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.content')
+                ->setTabTitle('sulu_content.content')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
