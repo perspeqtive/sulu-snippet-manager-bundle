@@ -17,10 +17,11 @@ use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
-
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+
 use function explode;
 use function implode;
+use function in_array;
 use function is_subclass_of;
 use function ucwords;
 
@@ -121,10 +122,10 @@ class ConfiguredSnippetAdmin extends Admin
             return;
         }
         $viewCollection->add(
-            $this->viewBuilderFactory->createFormViewBuilder($this->buildViewName(ViewTypes::ADD) . '.details', '/details')
+            $this->viewBuilderFactory->createFormViewBuilder($this->buildViewName(ViewTypes::ADD) . '.content', '/content')
                 ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.details')
+                ->setTabTitle('sulu_admin.content')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
@@ -138,10 +139,10 @@ class ConfiguredSnippetAdmin extends Admin
 
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createFormViewBuilder($this->buildViewName(ViewTypes::EDIT) . '.details', '/details')
+                ->createFormViewBuilder($this->buildViewName(ViewTypes::EDIT) . '.content', '/content')
                 ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.details')
+                ->setTabTitle('sulu_admin.content')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
@@ -304,7 +305,12 @@ class ConfiguredSnippetAdmin extends Admin
 
     private function buildViewName(string $type): string
     {
-        return 'sulu_snippet_manager_' . $this->snippetType . '.' . $type;
+        $suffix = $type;
+        if (in_array($type, [ViewTypes::EDIT, ViewTypes::ADD], true)) {
+            $suffix .= '_tabs';
+        }
+
+        return 'sulu_snippet_manager_' . $this->snippetType . '.' . $suffix;
     }
 
     private function hasInsightsSubViewPermissions(): bool

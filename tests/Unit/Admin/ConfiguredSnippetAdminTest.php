@@ -109,28 +109,28 @@ class ConfiguredSnippetAdminTest extends TestCase
         $views = $viewCollection->all();
 
         self::assertCount(10, $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs.content', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs.content', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.excerpt', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.settings', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.activity', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights.reference', $views);
 
-        $editView = $views['sulu_snippet_manager_testsnippet.edit'];
+        $editView = $views['sulu_snippet_manager_testsnippet.edit_tabs'];
         AssertView::assertResourceView([
-            'name' => 'sulu_snippet_manager_testsnippet.edit',
+            'name' => 'sulu_snippet_manager_testsnippet.edit_tabs',
             'path' => '/testsnippet-snippets/:locale/:id',
             'routerAttributesToBackView' => ['locale'],
             'backView' => 'sulu_snippet_manager_testsnippet.list',
             'locales' => ['de', 'en'],
         ], $editView->getView());
 
-        $addView = $views['sulu_snippet_manager_testsnippet.add'];
+        $addView = $views['sulu_snippet_manager_testsnippet.add_tabs'];
         AssertView::assertResourceView([
-            'name' => 'sulu_snippet_manager_testsnippet.add',
+            'name' => 'sulu_snippet_manager_testsnippet.add_tabs',
             'path' => '/testsnippet-snippets/:locale/add',
             'backView' => 'sulu_snippet_manager_testsnippet.list',
             'locales' => ['de', 'en'],
@@ -144,34 +144,34 @@ class ConfiguredSnippetAdminTest extends TestCase
             'listKey' => 'my_list_view',
             'title' => 'Testsnippet Administration',
             'routerAttributesToListRequest' => ['locale'],
-            'editView' => 'sulu_snippet_manager_testsnippet.edit',
-            'addView' => 'sulu_snippet_manager_testsnippet.add',
+            'editView' => 'sulu_snippet_manager_testsnippet.edit_tabs',
+            'addView' => 'sulu_snippet_manager_testsnippet.add_tabs',
             'toolbarActions' => ['save', 'delete'],
             'locales' => ['de', 'en'],
             'requestParameters' => ['types' => 'testsnippet', 'templateKeys' => 'testsnippet'],
         ], $listView->getView());
 
-        $editFormView = $views['sulu_snippet_manager_testsnippet.edit.details'];
+        $editFormView = $views['sulu_snippet_manager_testsnippet.edit_tabs.content'];
         AssertView::assertFormView([
-            'name' => 'sulu_snippet_manager_testsnippet.edit.details',
-            'path' => '/details',
+            'name' => 'sulu_snippet_manager_testsnippet.edit_tabs.content',
+            'path' => '/content',
             'resourceKey' => 'snippets',
             'formKey' => 'snippets',
-            'editView' => 'sulu_snippet_manager_testsnippet.edit',
+            'editView' => 'sulu_snippet_manager_testsnippet.edit_tabs',
             'toolbarActions' => ['save', 'delete'],
-            'parent' => 'sulu_snippet_manager_testsnippet.edit',
+            'parent' => 'sulu_snippet_manager_testsnippet.edit_tabs',
         ], $editFormView->getView());
 
-        $addFormView = $views['sulu_snippet_manager_testsnippet.add.details'];
+        $addFormView = $views['sulu_snippet_manager_testsnippet.add_tabs.content'];
         AssertView::assertFormView([
-            'name' => 'sulu_snippet_manager_testsnippet.add.details',
-            'path' => '/details',
+            'name' => 'sulu_snippet_manager_testsnippet.add_tabs.content',
+            'path' => '/content',
             'resourceKey' => 'snippets',
             'formKey' => 'snippets',
-            'editView' => 'sulu_snippet_manager_testsnippet.edit',
+            'editView' => 'sulu_snippet_manager_testsnippet.edit_tabs',
             'toolbarActions' => ['save', 'delete'],
             'metadataRequestParameters' => ['overwriteDefaultType' => 'testsnippet'],
-            'parent' => 'sulu_snippet_manager_testsnippet.add',
+            'parent' => 'sulu_snippet_manager_testsnippet.add_tabs',
         ], $addFormView->getView());
     }
 
@@ -194,10 +194,10 @@ class ConfiguredSnippetAdminTest extends TestCase
         $views = $viewCollection->all();
 
         self::assertCount(7, $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs.content', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs.content', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.excerpt', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.settings', $views);
@@ -224,10 +224,10 @@ class ConfiguredSnippetAdminTest extends TestCase
         $views = $viewCollection->all();
 
         self::assertCount(9, $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs.content', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs.content', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.excerpt', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights', $views);
@@ -256,10 +256,10 @@ class ConfiguredSnippetAdminTest extends TestCase
         $views = $viewCollection->all();
 
         self::assertCount(9, $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit.details', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add', $views);
-        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add.details', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.edit_tabs.content', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs', $views);
+        self::assertArrayHasKey('sulu_snippet_manager_testsnippet.add_tabs.content', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.list', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.insights', $views);
         self::assertArrayHasKey('sulu_snippet_manager_testsnippet.settings', $views);

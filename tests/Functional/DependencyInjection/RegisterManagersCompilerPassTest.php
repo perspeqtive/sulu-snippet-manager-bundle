@@ -60,22 +60,22 @@ class RegisterManagersCompilerPassTest extends KernelTestCase
         /** @var ViewRegistry $viewRegistry */
         $viewRegistry = static::getContainer()->get('sulu_admin.view_registry');
 
-        self::assertHasView('sulu_snippet_manager_settings.edit', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_settings.edit.details', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_settings.add', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_settings.add.details', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_settings.edit_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_settings.edit_tabs.content', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_settings.add_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_settings.add_tabs.content', $viewRegistry);
         self::assertHasView('sulu_snippet_manager_settings.list', $viewRegistry);
 
-        self::assertHasView('sulu_snippet_manager_account.edit', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_account.edit.details', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_account.add', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_account.add.details', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_account.edit_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_account.edit_tabs.content', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_account.add_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_account.add_tabs.content', $viewRegistry);
         self::assertHasView('sulu_snippet_manager_account.list', $viewRegistry);
 
-        self::assertHasView('sulu_snippet_manager_services.edit', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_services.edit.details', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_services.add', $viewRegistry);
-        self::assertHasView('sulu_snippet_manager_services.add.details', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_services.edit_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_services.edit_tabs.content', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_services.add_tabs', $viewRegistry);
+        self::assertHasView('sulu_snippet_manager_services.add_tabs.content', $viewRegistry);
         self::assertHasView('sulu_snippet_manager_services.list', $viewRegistry);
     }
 
