@@ -18,6 +18,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use function explode;
 use function implode;
 use function is_subclass_of;
@@ -91,7 +92,7 @@ class ConfiguredSnippetAdmin extends Admin
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createListViewBuilder($this->buildViewName(ViewTypes::LIST), '/' . $this->snippetType . '-snippets/:locale')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setListKey($this->listViewKey)
                 ->setTitle($this->buildName())
                 ->addListAdapters(['table'])
@@ -121,7 +122,7 @@ class ConfiguredSnippetAdmin extends Admin
         }
         $viewCollection->add(
             $this->viewBuilderFactory->createFormViewBuilder($this->buildViewName(ViewTypes::ADD) . '.details', '/details')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
@@ -138,7 +139,7 @@ class ConfiguredSnippetAdmin extends Admin
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createFormViewBuilder($this->buildViewName(ViewTypes::EDIT) . '.details', '/details')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditView($this->buildViewName(ViewTypes::EDIT))
@@ -161,14 +162,14 @@ class ConfiguredSnippetAdmin extends Admin
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::ADD), '/' . $this->snippetType . '-snippets/:locale/add')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->addLocales($locales)
                 ->setBackView($this->buildViewName(ViewTypes::LIST)),
         );
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::EDIT), '/' . $this->snippetType . '-snippets/:locale/:id')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->addRouterAttributesToBackView(['locale'])
                 ->setBackView($this->buildViewName(ViewTypes::LIST))
                 ->addLocales($locales)
@@ -196,7 +197,7 @@ class ConfiguredSnippetAdmin extends Admin
             $this->viewBuilderFactory
                 ->createFormViewBuilder($this->buildViewName(ViewTypes::EXCERPT), '/excerpt')
                 ->addMetadataRequestParameters(['forms' => $forms])
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('content_excerpt')
                 ->setTabTitle('sulu_content.taxonomies')
                 ->addToolbarActions(
@@ -231,7 +232,7 @@ class ConfiguredSnippetAdmin extends Admin
             $this->viewBuilderFactory
                 ->createFormViewBuilder($this->buildViewName(ViewTypes::SETTINGS), '/settings')
                 ->addMetadataRequestParameters(['forms' => $forms])
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('content_settings')
                 ->setTabTitle('sulu_content.settings')
                 ->setTitleVisible(true)
@@ -259,7 +260,7 @@ class ConfiguredSnippetAdmin extends Admin
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($this->buildViewName(ViewTypes::INSIGHTS), '/insights')
-                ->setResourceKey(Snippet::RESOURCE_KEY)
+                ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setTabOrder(6144)
                 ->setTabTitle('sulu_admin.insights')
                 ->setTitleProperty('')
@@ -272,7 +273,7 @@ class ConfiguredSnippetAdmin extends Admin
                     ->createActivityListViewBuilder(
                         $this->buildViewName(ViewTypes::INSIGHTS) . '.activity',
                         '/activities',
-                        Snippet::RESOURCE_KEY,
+                        SnippetInterface::RESOURCE_KEY,
                     )
                     ->setParent($this->buildViewName(ViewTypes::INSIGHTS)),
             );
@@ -284,7 +285,7 @@ class ConfiguredSnippetAdmin extends Admin
                     ->createReferenceListViewBuilder(
                         $this->buildViewName(ViewTypes::INSIGHTS) . '.reference',
                         '/references',
-                        Snippet::RESOURCE_KEY,
+                        SnippetInterface::RESOURCE_KEY,
                     )
                     ->setParent($this->buildViewName(ViewTypes::INSIGHTS)),
             );
