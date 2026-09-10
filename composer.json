@@ -26,7 +26,7 @@
   },
   "require-dev": {
     "jackalope/jackalope-doctrine-dbal": "^1.3.4 || ^2.0",
-    "phpunit/phpunit": "^11",
+    "phpunit/phpunit": "^13",
     "php-cs-fixer/shim": "^3.75",
     "phpstan/phpstan": "^2.1",
     "phpstan/phpstan-phpunit": "^2.0",
