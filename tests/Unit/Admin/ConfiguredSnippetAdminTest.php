@@ -157,7 +157,6 @@ class ConfiguredSnippetAdminTest extends TestCase
             'path' => '/content',
             'resourceKey' => 'snippets',
             'formKey' => 'snippets',
-            'editView' => 'sulu_snippet_manager_testsnippet.edit_tabs',
             'toolbarActions' => ['save', 'delete'],
             'parent' => 'sulu_snippet_manager_testsnippet.edit_tabs',
         ], $editFormView->getView());
