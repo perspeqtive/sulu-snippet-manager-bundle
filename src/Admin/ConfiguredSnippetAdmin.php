@@ -143,7 +143,6 @@ class ConfiguredSnippetAdmin extends Admin
                 ->setResourceKey(SnippetInterface::RESOURCE_KEY)
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_content.content')
-                ->setEditView($this->buildViewName(ViewTypes::EDIT))
                 ->addToolbarActions(
                     $this->formToolbarBuilder->build(
                         $this->buildSecurityContext(),
